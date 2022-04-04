@@ -1,0 +1,11 @@
+var a = 1;
+var b = two;
+
+add c a b;
+print c \n;
+
+sub c a b;
+print c \n;
+
+cos c b;
+print c \n;

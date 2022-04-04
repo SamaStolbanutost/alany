@@ -1,0 +1,81 @@
+var k = 0;
+var A = 0.0;
+var B = 0.0;
+var i = 0.0;
+var j = 0.0;
+array z = none;
+array b = none;
+array symbols = . , - ~ : ; = * ? # $ @ @;
+repeat 1765 {
+    append b space;
+}
+repeat 7040 {
+    append z 0;
+}
+print \x1b[2J;
+while (1==1) {
+    var temp = 0;
+    repeat 1760 {
+        b[temp] = space;
+        add temp temp 1;
+    }
+    var temp = 0;
+    repeat 7040 {
+        z[temp] = 0;
+        add temp temp 1;
+    }
+    var j = 0.0;
+    while (6.28 > j) {
+        var i = 0;
+        while (6.28 > i) {
+            sin c i;
+            cos d j;
+            sin e A;
+            sin f j;
+            cos g A;
+            add h d 2;
+            run D 1 / (float(memory['c']) * float(memory['h']) * float(memory['e']) + float(memory['f']) * float(memory['g']) + 5);
+            cos l i;
+            cos m B;
+            sin n B;
+            run t float(memory['c']) * float(memory['h']) * float(memory['g']) - float(memory['f']) * float(memory['e']);
+            run x 40 + 30 * float(memory['D']) * (float(memory['l']) * float(memory['h']) * float(memory['m']) - float(memory['t']) * float(memory['n']));
+            run y 12 + 15 * float(memory['D']) * (float(memory['l']) * float(memory['h']) * float(memory['n']) + float(memory['t']) * float(memory['m']));
+            run o float(memory['x']) + 80 * float(memory['y']);
+            run N 8 * ((float(memory['f']) * float(memory['e']) - float(memory['c']) * float(memory['d']) * float(memory['g'])) * float(memory['m']) - float(memory['c']) * float(memory['d']) * float(memory['e']) - float(memory['f']) * float(memory['g']) - float(memory['l']) * float(memory['d']) * float(memory['n']));
+            if (22 > y) {
+                if (y > 0) {
+                    if (x > 0) {
+                        if (80 > x) {
+                            if (D > z[o]) {
+                                var z[o] = D;
+                                if (N > 0) {
+                                    var b[o] = symbols[N];
+                                }
+                                if (N < 1) {
+                                    var b[o] = symbols[0];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            add i i 0.02;
+        }
+        add j j 0.07;
+    }
+    print \x1b[H;
+    var k = 0;
+    while (1761>k) {
+        rdiv temp k 80;
+        if (temp != 0.0) { 
+            print b[k];
+        }
+        if (temp == 0.0) {
+            putchar 10;
+        }
+        add k k 1;
+    }
+    add A A 0.04;
+    add B B 0.02;
+}
