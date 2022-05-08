@@ -7,7 +7,7 @@ Alany is a programming language for creating bots in AnonyGram and other program
 </div>
 
 <div>
-  <img src="logo.png" alt="Logo" width="196" height="150">
+  <img src="logo.png" alt="Logo" width="196" height="150" align="right">
 </div>
 </div>
 
