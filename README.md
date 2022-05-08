@@ -1,0 +1,63 @@
+# Alany
+
+Alany - programming language for creating bots in AnonyGram
+
+## Description
+
+
+
+## Getting Started
+
+### Dependencies
+
+* Python 3
+* Click
+
+### Installing
+
+* Download code
+```
+git clone https://github.com/anony-oss/alany.git
+```
+
+### Executing program
+
+* Run cli
+```
+python3 alany
+```
+
+## Help
+
+Run Alany code.
+```
+python3 alany run path/to/file
+```
+
+Run EsoByte code.
+```
+python3 alany esobyte run path/to/file
+```
+
+Get version.
+```
+python3 alany --version
+```
+
+List of commands.
+```
+python3 alany --help
+```
+
+## Authors
+
+Contributors names and contact info
+
+[@Vlad100]
+
+## Version History
+
+* 0.0.8
+    * Actual version
+* 0.0.1
+    * Initial Release
