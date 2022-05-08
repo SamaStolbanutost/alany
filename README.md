@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="Logo" width="105" height="80">
+  <img src="logo.png" alt="Logo" width="131" height="100">
 </div>
 
 # Alany 
