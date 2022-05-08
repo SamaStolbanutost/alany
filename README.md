@@ -1,3 +1,4 @@
+<div align ="center">
 <div align="left">
   
 # Alany 
@@ -8,6 +9,7 @@ Alany is a programming language for creating bots in AnonyGram and other program
 <div align="right">
   <img src="logo.png" alt="Logo" width="196" height="150">
 </div>
+ </div>
 
 ## Description
 
