@@ -1,4 +1,4 @@
-<div align="left">
+<div align="left" style="text-align: left">
   
 # Alany 
 
