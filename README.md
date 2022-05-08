@@ -1,5 +1,4 @@
-![](logo.png)
-# Alany
+# Alany ![](logo.png)
 
 Alany is a programming language for creating bots in AnonyGram and other programs.
 
