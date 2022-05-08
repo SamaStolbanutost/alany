@@ -1,15 +1,15 @@
-<div align ="center">
-<div align="left">
+<div style="display: flex;">
+<div>
   
 # Alany 
 
 Alany is a programming language for creating bots in AnonyGram and other programs.
 </div>
 
-<div align="right">
+<div>
   <img src="logo.png" alt="Logo" width="196" height="150">
 </div>
- </div>
+</div>
 
 ## Description
 
