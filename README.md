@@ -1,7 +1,6 @@
 <div align="center">
   <img src="logo.png" alt="Logo" width="105" height="80">
 </div>
-<br>
 
 # Alany 
 
