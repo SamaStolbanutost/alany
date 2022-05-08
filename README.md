@@ -1,6 +1,9 @@
+<div align="center">
+  <img src="logo.png" alt="Logo" width="80" height="80">
+</div>
 # Alany 
 
-Alany is a programming language for creating bots in AnonyGram and other programs. ![](logo.png)
+Alany is a programming language for creating bots in AnonyGram and other programs.
 
 ## Description
 
