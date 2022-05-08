@@ -1,0 +1,19 @@
+fun input;
+out;
+in;
+endfun;
+
+add First number: ;
+run input;
+
+add Second number: ;
+run input;
+
+add \n;
+stack rev;
+sum;
+add Result: ;
+
+out;
+out;
+out;

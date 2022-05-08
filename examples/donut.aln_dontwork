@@ -5,7 +5,7 @@ var i = 0.0;
 var j = 0.0;
 array z = none;
 array b = none;
-array symbols = . , - ~ : ; = * ? # $ @ @;
+array symbols = '.' ',' '-' '~' ':' ';' '=' '*' '?' '#' '$' '@' '@';
 repeat 1765 {
     append b space;
 }

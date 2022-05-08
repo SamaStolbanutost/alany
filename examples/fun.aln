@@ -1,0 +1,11 @@
+def sum {
+    convert int a;
+    convert int b;
+    add c a b;
+}
+
+var a = input;
+var b = input;
+runfun sum;
+
+print c \n;

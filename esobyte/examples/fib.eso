@@ -1,0 +1,30 @@
+add Max number: ;
+out;
+in;
+add \n;
+add 0;
+out;
+out;
+add 0;
+add 1;
+memory save l;
+memory save l2;
+
+memory load l;
+memory load l2;
+
+sum;
+
+memory load l2;
+
+memory save l;
+memory save l2;
+
+add \n;
+memory load l2;
+
+out;
+out;
+stack mul;
+memory load l2;
+less 12;

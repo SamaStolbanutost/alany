@@ -1,0 +1,5 @@
+print 'file_2';
+
+def test {
+    print 'Hello!' \n;
+}

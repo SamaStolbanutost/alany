@@ -1,4 +1,4 @@
-print none;
+print none \n;
 
 var a = none;
 print a \n;

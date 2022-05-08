@@ -1,0 +1,8 @@
+def input {
+    print arg;
+    var out = input;
+}
+
+def print {
+    print arg \n;
+}
