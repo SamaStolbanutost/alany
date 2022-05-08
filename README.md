@@ -1,6 +1,6 @@
-# Alany ![](logo.png)
+# Alany 
 
-Alany is a programming language for creating bots in AnonyGram and other programs.
+Alany is a programming language for creating bots in AnonyGram and other programs. ![](logo.png)
 
 ## Description
 
