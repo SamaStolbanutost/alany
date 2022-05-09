@@ -19,8 +19,8 @@ Alany was originally created to create bots in AnonyGram. It is currently a gene
 
 ### Dependencies
 
-* Python 3
-* Click
+* Python 3 (https://www.python.org/)
+* Click (https://pypi.org/project/click/)
 
 ### Installing
 
