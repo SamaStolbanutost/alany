@@ -59,9 +59,7 @@ python3 alany --help
 
 ## Authors
 
-Contributors names and contact info
-
-[@Vlad100]
+@Vlad100
 
 ## Version History
 
