@@ -190,7 +190,9 @@ class Node(object):
         elif commands[0] == 'type':
             print(self.memory.variables[commands[1]].type)
         elif commands[0] == 'import':
-            path = "/".join(file.split("/")[:-1]) + "/" + commands[1] + ".aln"
+            path = commands[1]
+            if not path[0] == '/':
+                path = "/".join(file.split("/")[:-1]) + "/" + path + ".aln"
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)
