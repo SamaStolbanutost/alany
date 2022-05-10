@@ -63,8 +63,8 @@ python3 alany --help
 @Vlad100
 
 ## Version History
-
-* 0.0.8
-    * Actual version
+* 0.0.9
+    * Add len command
+    * Add rule 110 example
 * 0.0.1
     * Initial Release
