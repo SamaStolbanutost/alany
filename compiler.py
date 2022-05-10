@@ -96,6 +96,8 @@ class Node(object):
             print(chr(int(float(self.get_value(' '.join(commands[1:]))))), end='')
         elif commands_w[0] == 'var':
             self.set_value(commands_w[1], self.get_value(' '.join(commands_w[2:])))
+        elif commands_w[0] == 'len':
+            self.set_value(commands_w[1], len(self.memory.variables[commands_w[2]].value))
         elif commands_w[0] == 'array':
             if not commands_w[2] == 'none':
                 values = []
@@ -164,13 +166,15 @@ class Node(object):
         elif commands_c[0] == 'repeat':
             for i in range(int(self.get_value(commands_c[1]))):
                 result = self.run_children(file)
-                if not result:
+                if result == 'break':
+                    break
+                if (not result) and (not result == 'break'):
                     return False
         elif commands_c[0] == 'while':
             while self.get_bool_value(commands_c[1]):
                 result = self.run_children(file)
                 if result == 'break':
-                    return True
+                    break
                 if (not result) and (not result == 'break'):
                     return False
         elif commands_c[0] == 'def':
@@ -202,8 +206,10 @@ class Node(object):
     def run_children(self, file) -> bool:
         for child in self.children:
             result = child.run(file)
-            if result==False:
+            if result == False:
                 return False
+            if result == 'break':
+                return 'break'
         return True
                 
 def remove_space(string):

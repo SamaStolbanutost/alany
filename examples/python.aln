@@ -1,6 +1,6 @@
 var a = 10;
 var b = 20;
 
-run d int(memory['a'])+int(memory['b']);
+run d int(self.memory.variables['a'].value)+int(self.memory.variables['b'].value);
 
 print d \n;

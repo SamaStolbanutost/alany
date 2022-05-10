@@ -1,24 +1,26 @@
 var a = input;
+convert int a;
+
 var min = 1;
-var max = 1000000;
+var max = 100;
 var b = 50;
 repeat 100 {
     if (a == b) {
-        print Ready \n;
+        print 'Ready' \n;
+        break;
     }
     if (a != b) {
-        if (b < a) {
-            var max = b;
-            print min \n;
-            print max \n;
-        }
         if (b > a) {
-            var min = b;
-            print min \n;
-            print max \n;
+            var max = b;
+            print 'Min:' min \n;
+            print 'Max:' max \n;
         }
-        add b max min \n;
+        if (b < a) {
+            var min = b;
+            print 'Min:' min \n;
+            print 'Max:' max \n;
+        }
+        add b max min;
         div b b 2;
     }
 }
-

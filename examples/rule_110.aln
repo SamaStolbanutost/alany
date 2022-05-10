@@ -1,1 +1,53 @@
-array map = 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1;
+array map = 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1;
+len len map;
+var cycles = 25;
+
+print map \n;
+
+def gen {
+    var res = 1;
+    if (arg_1 == 1) {
+        if (arg_2 == 1) {
+            if (arg_3 == 1) {
+                var res = 0;
+            } 
+        }
+        if (arg_2 == 0) {
+            if (arg_3 == 0) {
+                var res = 0;
+            }
+        }
+    }
+    if (arg_1 == 0) {
+        if (arg_2 == 0) {
+            if (arg_3 == 0) {
+                var res = 0;
+            }
+        }
+    }
+}
+
+def cycle {
+    array new_map = none;
+
+    var i = 0;
+    repeat (len) {
+        sub i1 i 1;
+        add i2 i 1;
+        var arg_1 = map[i1];
+        var arg_2 = map[i];
+        var arg_3 = map[i2];
+
+        runfun gen;
+        append new_map res;
+
+        add i i 1;
+    }
+    var map = new_map;
+
+    print map \n;
+}
+
+repeat (cycles) {
+    runfun cycle;
+}

@@ -18,7 +18,7 @@ class Memory(object):
             return parse_value(var_name, self)
         
 class Data(object):
-    def __init__(self, memory=None, value: any=None, var_name: str=None):
+    def __init__(self, memory, value: any=None, var_name: str=None):
         self.var_name = str(var_name)
         self.memory: Memory = memory
         self._value = None
@@ -32,6 +32,8 @@ class Data(object):
                 raise 'Not str'
         except:
             try:
+                if isinstance(value, float):
+                    raise 'Not int'
                 value = int(value)
                 self.type = 'int'
             except:
@@ -43,7 +45,7 @@ class Data(object):
                         self.type = 'list'
                         for i, dat in enumerate(value):
                             if not isinstance(dat, Data):
-                                value[i] = Data(None, dat)
+                                value[i] = Data(memory=self.memory, value=dat)
         
         if self.type is None:
             if value in self.memory.variables and not self.memory is None:
@@ -78,7 +80,10 @@ class Data(object):
         if isinstance(index, Data):
             index = index.value
         vl = to_value(self)
-        var = vl[int(index)]
+        index = int(index)
+        index = to_len(index, len(vl))
+        
+        var = vl[index]
         if isinstance(var, Data):
             return var.value
         else:
@@ -148,3 +153,9 @@ def clear_parse_value(value: any, memory):
         value = "'" + '\x1b' +  "'"
     value = Data(value=value, memory=memory).value
     return value
+
+def to_len(index, ln):
+    if index >= ln:
+        index -= ln
+        index = to_len(index, ln)
+    return index

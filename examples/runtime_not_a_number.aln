@@ -1,5 +1,5 @@
 var a = 1;
-var b = two;
+var b = 'two';
 
 add c a b;
 print c \n;
