@@ -66,5 +66,8 @@ python3 alany --help
 * 0.0.9
     * Add len command
     * Add rule 110 example
+    * Fix examples
+    * Add absolute import
+    * Fix break
 * 0.0.1
     * Initial Release
