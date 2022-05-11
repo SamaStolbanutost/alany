@@ -1,24 +1,45 @@
 class Memory(object):
-    def __init__(self, parent=None, children=[], defs: dict[str]={}):
+    def __init__(self, parent=None, children=[]):
         self.parent: Memory = parent
         self.children: list[Memory] = children
         self.variables: dict[str, Data] = {}
-        self.defs = defs
         
     def add_var(self, value: any, var_name: str):
         self.variables[var_name] = Data(memory=self, value=clear_parse_value(value, self), var_name=var_name)
         
+    def add_global_var(self, value: any, var_name: str):
+        if not self.parent is None:
+            self.parent.add_global_var(value=value, var_name=var_name)
+        else:
+            self.add_var(value=value, var_name=var_name)
+        
     def set_var(self, value: any, var_name: str):
-        self.variables[var_name]._value = clear_parse_value(value, self)
+        if var_name in self.variables:
+            self.variables[var_name]._value = clear_parse_value(value, self)
+        elif self.parent is not None:
+            self.parent.set_var(value=value, var_name=var_name)
+        
+    def in_memory(self, var_name: str):
+        if var_name in self.variables:
+            return True
+        elif self.parent is not None:
+            return self.parent.in_memory(var_name)
+        else:
+            return False
         
     def get_var(self, var_name: str):
-        try:
+        if var_name in self.variables:
             return self.variables[var_name]
-        except:
+        elif self.parent is not None:
+            return self.parent.get_var(var_name=var_name)
+        else:
             return parse_value(var_name, self)
+            
         
 class Data(object):
     def __init__(self, memory, value: any=None, var_name: str=None):
+        from compiler import Node
+        
         self.var_name = str(var_name)
         self.memory: Memory = memory
         self._value = None
@@ -46,12 +67,14 @@ class Data(object):
                         for i, dat in enumerate(value):
                             if not isinstance(dat, Data):
                                 value[i] = Data(memory=self.memory, value=dat)
+                    elif isinstance(value, Node):
+                        self.type = 'node'
         
         if self.type is None:
-            if value in self.memory.variables and not self.memory is None:
-                self._value = self.memory.variables[value]._value
-                self.type = self.memory.variables[value].type
-                self.var_name = self.memory.variables[value].var_name
+            if self.memory.in_memory(value) and not self.memory is None:
+                self._value = self.memory.get_var(value)._value
+                self.type = self.memory.get_var(value).type
+                self.var_name = self.memory.get_var(value).var_name
             else:
                 from compiler import Error
                 Error.Runtime.unknow_type(value)

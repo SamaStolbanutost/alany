@@ -3,9 +3,10 @@ def sum {
     convert int b;
     add c a b;
 }
+var sum_2 = sum;
 
 var a = input;
 var b = input;
-runfun sum;
+runfun sum_2;
 
 print c \n;

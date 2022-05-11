@@ -1,4 +1,4 @@
-print space;
+print space \n;
 
 var a = space;
 print a \n;

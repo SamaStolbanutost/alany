@@ -30,14 +30,7 @@ class Node(object):
         self.memory = memory
     
     def get_value(self, variable: str) -> any:
-        # print(memory)
-        # if variable in self.memory.variables:
-        #     var = self.memory.get_var(variable).value
-        #     if isinstance(var, Data):
-        #         return var.value
-        #     else:
-        #         return var
-        if variable.split('[')[0] in self.memory.variables and variable[-1] == ']':
+        if self.memory.in_memory(variable.split('[')[0]) and variable[-1] == ']':
             var = self.memory.get_var(variable.split('[')[0]).get_list_value(self.get_value(variable.split('[')[1][:-1]))
             if isinstance(var, Data):
                 return var.value
@@ -47,18 +40,19 @@ class Node(object):
             val = parse_value(variable, self.memory)
             return val
         
-    def set_value(self, variable: str, value: any) -> None:
+    def set_value(self, variable: str, value: any, g=True) -> None:
         if isinstance(value, Data):
             value = value.value
-        if variable in self.memory.variables:
+        if self.memory.in_memory(variable):
             self.memory.get_var(variable).value = value
         elif variable[-1] == ']':
-            # print(len(memory[variable.split('[')[0]]))
-            # print(float(self.get_value(variable.split('[')[1][:-1])))
             var = self.memory.get_var(variable.split('[')[0])
             var.set_list_value(self.get_value(variable.split('[')[1][:-1]), value)
         else:
-            self.memory.add_var(value, variable)
+            if not g:
+                self.memory.add_var(value, variable)
+            else: 
+                self.memory.add_global_var(value, variable)
         
     def get_bool_value(self, expression: str) -> bool:
         if '==' in expression:
@@ -95,17 +89,28 @@ class Node(object):
         if commands[0] == 'putchar':
             print(chr(int(float(self.get_value(' '.join(commands[1:]))))), end='')
         elif commands_w[0] == 'var':
-            self.set_value(commands_w[1], self.get_value(' '.join(commands_w[2:])))
+            if commands_w[1] == 'local':
+                self.set_value(commands_w[2], self.get_value(' '.join(commands_w[3:])), g=False)
+            else:
+                self.set_value(commands_w[1], self.get_value(' '.join(commands_w[2:]))) 
         elif commands_w[0] == 'len':
-            self.set_value(commands_w[1], len(self.memory.variables[commands_w[2]].value))
+            self.set_value(commands_w[1], len(self.memory.get_var(commands_w[2]).value))
         elif commands_w[0] == 'array':
             if not commands_w[2] == 'none':
                 values = []
-                for value in commands_w[2:]:
-                    values.append(self.get_value(value))
-                self.set_value(commands_w[1], values)
+                if commands_w[1] == 'local':
+                    for value in commands_w[3:]:
+                        values.append(self.get_value(value))
+                    self.set_value(commands_w[2], values, g=False)
+                else:
+                    for value in commands_w[2:]:
+                        values.append(self.get_value(value))
+                    self.set_value(commands_w[1], values)
             else:
-                self.set_value(commands_w[1], [])
+                if commands_w[1] == 'local':
+                    self.set_value(commands_w[2], [], g=False)
+                else:
+                    self.set_value(commands_w[1], [])
         elif commands[0] == 'add':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
@@ -178,17 +183,17 @@ class Node(object):
                 if (not result) and (not result == 'break'):
                     return False
         elif commands_c[0] == 'def':
-            self.memory.defs[commands_c[1]] = self
+            self.memory.add_global_var(value=self, var_name=commands_c[1])
         elif commands[0] == 'append':
             self.memory.get_var(commands[1])._value.append(self.get_value(commands[2]))
         elif commands[0] == 'runfun':
-            return self.memory.defs[commands[1]].run_children(file)
+            return self.memory.get_var(commands[1]).value.run_children(file)
         elif commands[0] == 'convert':
             if commands[1] == 'int':
-                self.memory.variables[commands[2]].type = 'int'
-                self.memory.variables[commands[2]].value = int(self.memory.variables[commands[2]].value)
+                self.memory.get_var(commands[2]).type = 'int'
+                self.memory.get_var(commands[2]).value = int(self.memory.get_var(commands[2]).value)
         elif commands[0] == 'type':
-            print(self.memory.variables[commands[1]].type)
+            print(self.memory.get_var(commands[1]).type)
         elif commands[0] == 'import':
             path = commands[1]
             if not path[0] == '/':
@@ -240,6 +245,7 @@ class Parser(object):
             command = remove_space(command)
             if command.split(' ')[0] in ['if', 'repeat', 'while', 'def']:
                 #print(1)
+                self.memory = Memory(parent=self.memory)
                 node = Node(command, index=i, memory=self.memory)
                 result = self.parse(i)
                 node.children = result[0].children
@@ -247,7 +253,7 @@ class Parser(object):
                 con = True
                 con_to = result[1]
             elif command.split(' ')[0] == 'endblock':
-                #print(2)
+                self.memory = self.memory.parent
                 return [main_node, i]
             else:
                 main_node.children.append(Node(command, index=i, memory=self.memory))

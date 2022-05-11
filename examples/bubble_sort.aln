@@ -1,11 +1,14 @@
-array data = 10 43 2 34 13;
+array data = 10 43 2 34 3412 13 31 84 78 141 1283;
+var len = 0;
+len len data;
+sub len len 1;
 
 var b = 1;
 while (1 == b) {
     var i = 0;
     var ii = 1;
     var b = 0;
-    repeat (4) {
+    repeat (len) {
         if (data[i] > data[ii]) {
             var temp = data[ii];
             var data[ii] = data[i];
@@ -15,6 +18,5 @@ while (1 == b) {
         add i i 1;
         add ii ii 1;
     }
-    print data;
-    print \n;
+    print 'Data:' data \n;
 }

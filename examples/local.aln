@@ -1,0 +1,8 @@
+var local a = 'a';
+
+if (a == 'a') {
+    var local b = 'b';
+}
+
+print a \n;
+print b \n;
