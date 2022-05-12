@@ -1,0 +1,8 @@
+def print(a, b) {
+    print a b \n;
+}
+
+var d = 10;
+var f = 13;
+
+runfun print d f;

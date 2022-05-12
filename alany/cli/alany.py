@@ -1,6 +1,6 @@
 import click
-import compiler
-from cli.main import cli
+from .. import compiler
+from .main import cli
 
 @cli.command()
 @click.argument('file')

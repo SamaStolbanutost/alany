@@ -1,0 +1,7 @@
+def sum(a, b) {
+    add c a b;
+    return c;
+}
+
+var result = sum(1, 2);
+print result \n;

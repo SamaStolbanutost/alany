@@ -1,6 +1,7 @@
 import math
 import time
-from memory import Memory, Data, parse_value
+from .memory import Memory, Data, parse_value
+from typing import List
 
 class Error:
     class Runtime:
@@ -17,20 +18,43 @@ class Error:
         def stop() -> None:
             print('Program: Stopped with error')
   
-
+class Result(object):
+    def __init__(self, status=1, value=None):
+        self.status = status
+        self.value = value
+        
+    def is_success(self) -> bool:
+        if self.status in [1, 2]:
+            return True
+        else:
+            return False
 
 class Node(object):
     def __init__(self, command: str='', children=None, index: int=0, memory: Memory=None):
         self.command = command.replace('  ', ' ')
         if children is not None:
-            self.children: list[Node] = children
+            self.children: List[Node] = children
         else:
-            self.children: list[Node] = []
+            self.children: List[Node] = []
         self.index = index
         self.memory = memory
+        
+    def get_args(self):
+        args = remove_all_space(self.command).split('(')[1].split(')')[0].split(',')
+        return args   
     
-    def get_value(self, variable: str) -> any:
-        if self.memory.in_memory(variable.split('[')[0]) and variable[-1] == ']':
+    def get_value(self, variable: str, file: str=None) -> any:
+        if self.memory.in_memory(variable.split('(')[0]) and variable[-1] == ')':
+            node: Node = self.memory.get_var(variable.split('(')[0]).value
+            
+            args_names = node.get_args()
+            args = variable.split('(')[1][:-1].split(',')
+            for i in range(len(args)):
+                node.memory.add_var(value=args[i], var_name=args_names[i])
+                
+            return node.run_children(file).value
+            
+        elif self.memory.in_memory(variable.split('[')[0]) and variable[-1] == ']':
             var = self.memory.get_var(variable.split('[')[0]).get_list_value(self.get_value(variable.split('[')[1][:-1]))
             if isinstance(var, Data):
                 return var.value
@@ -74,7 +98,7 @@ class Node(object):
             expression = expression.replace('<', ' ').split(' ')
             return self.get_value(expression[0]) < self.get_value(expression[1])
     
-    def run(self, file: str) -> any:
+    def run(self, file: str) -> Result:
         commands = self.command.split(' ')
         commands_w = self.command.replace('=', '').replace('  ', ' ').split(' ')
         commands_c = self.command.replace('(', '').replace(')', '').split(' ')
@@ -86,13 +110,13 @@ class Node(object):
                     val = val[1:-1]
                 values[i] = val
             print(' '.join(values), end='')
-        if commands[0] == 'putchar':
+        elif commands[0] == 'putchar':
             print(chr(int(float(self.get_value(' '.join(commands[1:]))))), end='')
         elif commands_w[0] == 'var':
             if commands_w[1] == 'local':
                 self.set_value(commands_w[2], self.get_value(' '.join(commands_w[3:])), g=False)
             else:
-                self.set_value(commands_w[1], self.get_value(' '.join(commands_w[2:]))) 
+                self.set_value(commands_w[1], self.get_value(' '.join(commands_w[2:])), file) 
         elif commands_w[0] == 'len':
             self.set_value(commands_w[1], len(self.memory.get_var(commands_w[2]).value))
         elif commands_w[0] == 'array':
@@ -116,78 +140,87 @@ class Node(object):
             b = self.get_value(commands[3])
             if (not isinstance(a, int) and not isinstance(a, float)) or (not isinstance(b, int) and not isinstance(b, float)):
                 Error.Runtime.not_a_number(a, b, fun='+')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], a+b)
         elif commands[0] == 'sub':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
             if not isinstance(a, int) and not isinstance(a, float) or not isinstance(b, int) and not isinstance(b, float):
                 Error.Runtime.not_a_number(a, b, fun='-')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], a-b)
         elif commands[0] == 'div':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
             if not isinstance(a, int) and not isinstance(a, float) or not isinstance(b, int) and not isinstance(b, float):
                 Error.Runtime.not_a_number(a, b, fun='/')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], a/b)
         elif commands[0] == 'rdiv':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
             if not isinstance(a, int) and not isinstance(a, float) or not isinstance(b, int) and not isinstance(b, float):
                 Error.Runtime.not_a_number(a, b, fun='%')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], a%b)
         elif commands[0] == 'sin':
             a = self.get_value(commands[2])
             if not isinstance(a, int) and not isinstance(a, float):
                 Error.Runtime.not_a_number(a, fun='sin')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], math.sin(a))
         elif commands[0] == 'cos':
             a = self.get_value(commands[2])
             if not isinstance(a, int) and not isinstance(a, float):
                 Error.Runtime.not_a_number(a, fun='cos')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], math.cos(a))
         elif commands[0] == 'run':
             self.set_value(commands[1], eval(''.join(commands[2:])))
         elif commands[0] == 'break':
-            return 'break'
+            return Result(status=2)
         elif commands[0] == 'mul':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
             if not isinstance(a, int) and not isinstance(a, float) or not isinstance(b, int) and not isinstance(b, float):
                 Error.Runtime.not_a_number(a, b, '*')
-                return False
+                return Result(status=0)
             self.set_value(commands[1], a*b)
         elif commands_c[0] == 'if':
-            #print(1)
-            #print(self.get_value(commands[1]))
-            #print(self.get_value(commands[2]))
             if self.get_bool_value(commands_c[1]):
                 return self.run_children(file)
         elif commands_c[0] == 'repeat':
             for i in range(int(self.get_value(commands_c[1]))):
                 result = self.run_children(file)
-                if result == 'break':
-                    break
-                if (not result) and (not result == 'break'):
-                    return False
+                if result.status == 2:
+                    return result
+                if not result.is_success():
+                    return Result(status=0)
         elif commands_c[0] == 'while':
             while self.get_bool_value(commands_c[1]):
-                result = self.run_children(file)
-                if result == 'break':
-                    break
-                if (not result) and (not result == 'break'):
-                    return False
+                result: Result = self.run_children(file)
+                if result.status == 2:
+                    return result
+                elif not result.is_success():
+                    return Result(status=0)
         elif commands_c[0] == 'def':
-            self.memory.add_global_var(value=self, var_name=commands_c[1])
+            var_name = commands[1].split('(')[0]
+            self.memory.add_global_var(value=self, var_name=var_name)
         elif commands[0] == 'append':
             self.memory.get_var(commands[1])._value.append(self.get_value(commands[2]))
         elif commands[0] == 'runfun':
-            return self.memory.get_var(commands[1]).value.run_children(file)
+            node: Node = self.memory.get_var(commands[1]).value
+            
+            try:
+                args_names = node.get_args()
+                args = commands[2:]
+                for i in range(len(args)):
+                    node.memory.add_var(value=args[i], var_name=args_names[i])
+            except:
+                pass
+            
+            res = node.run_children(file)
+            return res
         elif commands[0] == 'convert':
             if commands[1] == 'int':
                 self.memory.get_var(commands[2]).type = 'int'
@@ -206,20 +239,26 @@ class Node(object):
             parser = Parser(code=code, memory=self.memory)
             node = parser.parse()[0]
             node.run(path)
+        elif commands[0] == 'return':
+            value = self.get_value(' '.join(commands[1:]))
+            return Result(status=2, value=value)
         else:
             return self.run_children(file)
-        return True
+        return Result(status=1)
                 
-    def run_children(self, file) -> bool:
+    def run_children(self, file) -> Result:
         for child in self.children:
-            result = child.run(file)
-            if result == False:
-                return False
-            if result == 'break':
-                return 'break'
-        return True
+            result: Result = child.run(file)
+            if not result.is_success():
+                return result
+            if result.status == 2:
+                return result
+        return Result(status=1)
                 
-def remove_space(string):
+def remove_all_space(string: str):
+    return string.replace(' ', '')
+                
+def remove_space(string: str):
     if string and string[0] == ' ':
         string = string[1:]
         return remove_space(string)
@@ -231,7 +270,7 @@ class Parser(object):
         self.code: str = code
         self.memory: Memory = memory
         
-    def parse(self, i=-1) -> list[Node]:
+    def parse(self, i=-1) -> List[Node]:
         main_node = Node(memory=self.memory)
         code = self.code.split(';')
         
@@ -264,24 +303,25 @@ class Lexer(object):
     def __init__(self, code: str):
         self.code: str = code
         
-    def parse(self) -> None:
+    def parse(self) -> str:
         self.code = self.code.replace('\n', '')
         self.code = self.code.replace('    ', '').replace('   ', '').replace('  ', '')
         self.code = self.code.replace(' {', ';').replace('{', ';').replace('}', 'endblock;')
         self.code = self.code.replace(' == ', '==').replace(' != ', '!=').replace(' > ', '>').replace(' < ', '<')
+        return self.code
         
 class Main(object):
     def __init__(self, code: str):
         self.code: str = code
         self.lexer = Lexer(self.code)
         
-    def run(self, file) -> None:
+    def run(self, file: str) -> Result:
         self.memory = Memory()
         self.lexer.parse()
         self.code = self.lexer.code
         self.parser = Parser(self.code, self.memory)
         self.node = self.parser.parse()[0]
-        self.node.run(file)
+        return self.node.run(file)
     
     
 
@@ -307,10 +347,11 @@ class Compiler():
         tm = time.time()
         main = Main(code)
         result = main.run(file)
-        if result==False:
-            Error.Programm.stop()
-        else:
+        if result.is_success():
             print(f'Program: Completed in {time.time()-tm} seconds')
+        else:
+            Error.Programm.stop()
             
+
 # c = Compiler()
-# c.run_file('examples/fun.aln')
+# c.run_file('examples/return.aln')

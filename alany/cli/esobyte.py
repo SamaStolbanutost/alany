@@ -1,6 +1,6 @@
 import click
-from esobyte import compiler
-from cli.main import cli
+from ..esobyte import compiler
+from .main import cli
 
 @cli.group()
 @click.version_option('EsoByte 0.0.1')

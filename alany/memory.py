@@ -1,8 +1,10 @@
+from typing import List, Dict
+
 class Memory(object):
     def __init__(self, parent=None, children=[]):
         self.parent: Memory = parent
-        self.children: list[Memory] = children
-        self.variables: dict[str, Data] = {}
+        self.children: List[Memory] = children
+        self.variables: Dict[str, Data] = {}
         
     def add_var(self, value: any, var_name: str):
         self.variables[var_name] = Data(memory=self, value=clear_parse_value(value, self), var_name=var_name)
@@ -38,7 +40,7 @@ class Memory(object):
         
 class Data(object):
     def __init__(self, memory, value: any=None, var_name: str=None):
-        from compiler import Node
+        from .compiler import Node
         
         self.var_name = str(var_name)
         self.memory: Memory = memory
@@ -76,7 +78,7 @@ class Data(object):
                 self.type = self.memory.get_var(value).type
                 self.var_name = self.memory.get_var(value).var_name
             else:
-                from compiler import Error
+                from .compiler import Error
                 Error.Runtime.unknow_type(value)
         else:
             self._value: any = value
@@ -164,16 +166,16 @@ def to_value(value: any):
     
 def clear_parse_value(value: any, memory):
     value = to_value(value)       
+    escape_symbols = {'\\0': '\0', '\\n': '\n', '\\r': '\r', '\\t': '\t', '\\v': '\v', '\\\\': '\\',  "\'": "\'", '\"': '\"', '\\a': '\a'}
+    
     if value == 'input':
         value = "'" + input() + "'"
     elif value == 'space':
         value = "'" + ' ' +  "'"
     elif value == 'none':
         value = "'" + '' +  "'"
-    elif value == '\\n':
-        value = "'" + '\n' +  "'"
-    elif value == '\\x1b':
-        value = "'" + '\x1b' +  "'"
+    elif value in escape_symbols:
+        value = "'" + escape_symbols[value] +  "'"
     value = Data(value=value, memory=memory).value
     return value
 

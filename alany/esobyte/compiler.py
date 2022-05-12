@@ -1,6 +1,7 @@
 from queue import LifoQueue
+from typing import List, Dict, Any
 
-def run(index: int, code: list[str], stack: LifoQueue, memory: dict[str:any], fun: bool, funs: dict[str:int]):
+def run(index: int, code: List[str], stack: LifoQueue, memory: Dict[str, Any], fun: bool, funs: Dict[str, int]):
     commands = code[index].split(' ')
     command = commands[0]
     

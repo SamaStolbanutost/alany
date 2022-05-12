@@ -1,7 +1,8 @@
+#!/usr/bin/python3
 import sys
-from cli.alany import *
-from cli.esobyte import *
-from cli.main import cli
+from .cli.alany import *
+from .cli.esobyte import *
+from .cli.main import cli
 
 if __name__ == '__main__':
     args = sys.argv
