@@ -343,7 +343,7 @@ class Compiler():
         with open(file, 'r') as fl:
             self.run(fl.read(), file=file)
 
-    def run(self, code, file) -> None:
+    def run(self, code, file='/') -> None:
         tm = time.time()
         main = Main(code)
         result = main.run(file)
