@@ -1,5 +1,5 @@
 import click
-from .. import compiler
+from ..compiler import Compiler
 from .main import cli
 
 @cli.command()
@@ -7,6 +7,6 @@ from .main import cli
 @click.option('--code', '-c', default='')
 def run(file, code):
     if not file == '':
-        compiler.Compiler().run_file(file)
+        Compiler().run_file(file)
     elif not code == '':
-        compiler.Compiler().run(code=code, file='/')
+        Compiler().run(code=code, file='/')

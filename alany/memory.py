@@ -1,4 +1,5 @@
 from typing import List, Dict
+from .error import Error
 
 class Memory(object):
     def __init__(self, parent=None, children=[]):
@@ -40,7 +41,7 @@ class Memory(object):
         
 class Data(object):
     def __init__(self, memory, value: any=None, var_name: str=None):
-        from .compiler import Node
+        from .node import Node
         
         self.var_name = str(var_name)
         self.memory: Memory = memory
@@ -78,7 +79,6 @@ class Data(object):
                 self.type = self.memory.get_var(value).type
                 self.var_name = self.memory.get_var(value).var_name
             else:
-                from .compiler import Error
                 Error.Runtime.unknow_type(value)
         else:
             self._value: any = value
