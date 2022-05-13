@@ -63,11 +63,18 @@ python3 alany --help
 @Vlad100
 
 ## Version History
+* 0.1.0
+    * Added arguments to functions
+    * Added return command
+    * Added use of functions as values
+    * Alany now package
+    * Added default command
+    * Added return.aln and args.aln examples
 * 0.0.9
-    * Add len command
-    * Add rule 110 example
-    * Fix examples
-    * Add absolute import
-    * Fix break
+    * Added len command
+    * Added rule 110 example
+    * Fixed examples
+    * Added absolute import
+    * Fixed break
 * 0.0.1
     * Initial Release
