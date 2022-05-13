@@ -41,22 +41,27 @@ python3 alany
 
 Run Alany code.
 ```
-python3 alany run path/to/file
+python3 -m alany path/to/file
+```
+
+Run Alany code without file.
+```
+python3 -m alany -c "print 10 \n;"
 ```
 
 Run EsoByte code.
 ```
-python3 alany esobyte run path/to/file
+python3 -m alany esobyte run path/to/file
 ```
 
 Get version.
 ```
-python3 alany --version
+python3 -m alany --version
 ```
 
 List of commands.
 ```
-python3 alany --help
+python3 -m alany --help
 ```
 
 ## Authors
