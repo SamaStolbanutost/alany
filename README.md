@@ -34,7 +34,7 @@ pip install -e alany
 
 * Run cli
 ```
-python3 alany
+python3 -m alany
 ```
 
 ## Help
