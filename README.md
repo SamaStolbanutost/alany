@@ -76,6 +76,8 @@ python3 -m alany --help
     * Alany now package
     * Added default command
     * Added return.aln and args.aln examples
+    * Added escape symbols
+    * Added code launch without file
 * 0.0.9
     * Added len command
     * Added rule 110 example
