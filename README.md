@@ -27,6 +27,7 @@ Alany was originally created to create bots in AnonyGram. It is currently a gene
 * Download code
 ```
 git clone https://github.com/anony-oss/alany.git
+pip install -e alany
 ```
 
 ### Executing program
