@@ -5,7 +5,7 @@ from .error import Error
 from .result import Result
 
 class Node(object):
-    def __init__(self, command: str='', children=None, index: int=0, memory: Memory=None):
+    def __init__(self, command: str='', children=None, index: int=0, memory: Memory=None, is_interpreter: bool=False):
         self.command = command.replace('  ', ' ')
         if children is not None:
             self.children: List[Node] = children
@@ -13,6 +13,7 @@ class Node(object):
             self.children: List[Node] = []
         self.index = index
         self.memory = memory
+        self.is_interpreter = is_interpreter
         
     def get_args(self):
         args = remove_all_space(self.command).split('(')[1].split(')')[0].split(',')
@@ -77,6 +78,7 @@ class Node(object):
         commands = self.command.split(' ')
         commands_w = self.command.replace('=', '').replace('  ', ' ').split(' ')
         commands_c = self.command.replace('(', '').replace(')', '').split(' ')
+        
         if commands[0] == 'print':
             values = commands[1:]
             for i, value in enumerate(values):
@@ -218,6 +220,18 @@ class Node(object):
         elif commands[0] == 'return':
             value = self.get_value(' '.join(commands[1:]))
             return Result(status=2, value=value)
+        elif self.is_interpreter == True:
+            values = []
+            for i in commands:
+                if not i == '':
+                    values.append(i)
+            for i, value in enumerate(values):
+                val = str(self.get_value(value))
+                if (val[0] == '"' and val[-1] == '"') or (val[0] == "'" and val[-1] == "'"):
+                    val = val[1:-1]
+                values[i] = val
+            if len(values) > 0:
+                print(' '.join(values))
         else:
             return self.run_children(file)
         return Result(status=1)

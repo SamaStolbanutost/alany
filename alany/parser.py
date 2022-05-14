@@ -3,12 +3,13 @@ from .node import Node
 from .memory import Memory
 
 class Parser(object):
-    def __init__(self, code: str, memory: Memory):
+    def __init__(self, code: str, memory: Memory, is_interpreter: bool=False):
         self.code: str = code
         self.memory: Memory = memory
+        self.is_interpreter: bool = is_interpreter
         
     def parse(self, i=-1) -> List[Node]:
-        main_node = Node(memory=self.memory)
+        main_node = Node(memory=self.memory, is_interpreter=self.is_interpreter)
         code = self.code.split(';')
         
         con_to = i
@@ -20,9 +21,8 @@ class Parser(object):
                 con = False
             command = remove_space(command)
             if command.split(' ')[0] in ['if', 'repeat', 'while', 'def']:
-                #print(1)
                 self.memory = Memory(parent=self.memory)
-                node = Node(command, index=i, memory=self.memory)
+                node = Node(command, index=i, memory=self.memory, is_interpreter=self.is_interpreter)
                 result = self.parse(i)
                 node.children = result[0].children
                 main_node.children.append(node)
@@ -32,7 +32,7 @@ class Parser(object):
                 self.memory = self.memory.parent
                 return [main_node, i]
             else:
-                main_node.children.append(Node(command, index=i, memory=self.memory))
+                main_node.children.append(Node(command, index=i, memory=self.memory, is_interpreter=self.is_interpreter))
                 
         return [main_node, i]
     
