@@ -1,0 +1,14 @@
+var path = 'examples/some.aln';
+
+def read(path) {
+    file read path value;
+    print value \n;
+}
+
+runfun read path;
+
+var value = 'Bye!';
+file write path value;
+runfun read path;
+
+file write path 'Hello!';

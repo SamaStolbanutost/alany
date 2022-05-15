@@ -202,6 +202,12 @@ class Node(object):
             if commands[1] == 'int':
                 self.memory.get_var(commands[2]).type = 'int'
                 self.memory.get_var(commands[2]).value = int(self.memory.get_var(commands[2]).value)
+            elif commands[1] == 'float':
+                self.memory.get_var(commands[2]).type = 'float'
+                self.memory.get_var(commands[2]).value = float(self.memory.get_var(commands[2]).value)
+            elif commands[1] == 'str':
+                self.memory.get_var(commands[2]).type = 'str'
+                self.memory.get_var(commands[2]).value = str(self.memory.get_var(commands[2]).value)
         elif commands[0] == 'type':
             print(self.memory.get_var(commands[1]).type)
         elif commands[0] == 'import':
@@ -220,6 +226,21 @@ class Node(object):
         elif commands[0] == 'return':
             value = self.get_value(' '.join(commands[1:]))
             return Result(status=2, value=value)
+        elif commands[0] == 'file':
+            if commands[1] == 'read':
+                path = self.get_value(commands[2])[1:-1]
+                var = commands[3]
+                
+                with open(path, 'r') as file:
+                    text = "'" + file.read() + "'"
+                    
+                self.memory.add_var(var_name=var, value=text)
+            elif commands[1] == 'write':
+                path = self.get_value(commands[2])[1:-1]
+                value = self.get_value(commands[3])[1:-1]
+                
+                with open(path, 'w') as file:
+                    file.write(value)
         elif self.is_interpreter == True:
             values = []
             for i in commands:

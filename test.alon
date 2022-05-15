@@ -1,0 +1,27 @@
+main = (
+    id = 101;
+    balance = 100.7;
+
+    user_1 = (
+        id = id;
+        name = "Alon";
+        balance = balance;
+    );
+
+    name = user.name;
+
+    user_2 = (
+        id = 102;
+        name = "Json";
+        balance = 404.500;
+    );
+
+    database = (
+        users = [
+            user_1;
+            user_2;
+        ]
+    );
+);
+
+return main;
