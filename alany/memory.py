@@ -42,6 +42,36 @@ class Memory(object):
         else:
             return parse_value(var_name, self)
 
+    def get_value(self, variable: str, file: str = None) -> any:
+        from .node import Node
+
+        try:
+            ends = variable[-1]
+        except Exception:
+            ends = ''
+        if self.in_memory(variable.split('(')[0]) and ends == ')':
+            node: Node = self.get_var(variable.split('(')[0]).value
+
+            args_names = node.get_args()
+            args = variable.split('(')[1][:-1].split(',')
+            for i in range(len(args)):
+                value = self.get_value(args[i])
+                var_name = args_names[i]
+                node.memory.add_var(value=value, var_name=var_name)
+
+            return node.run_children(file).value
+        elif self.in_memory(variable.split('[')[0]) and ends == ']':
+            var = self.get_var(variable.split('[')[0])
+            val = self.get_value(variable.split('[')[1][:-1])
+            var = var.get_list_value(val)
+            if isinstance(var, Data):
+                return var.value
+            else:
+                return var
+        else:
+            val = parse_value(variable, self)
+            return val
+
 
 class Data(object):
     def __init__(self, memory, value: any = None, var_name: str = None):

@@ -1,9 +1,8 @@
 #!/usr/bin/python3
 import sys
-from .cli.alany import *
-from .cli.esobyte import *
+from .cli.alany import run as rn
+from .cli.esobyte import esobyte, run
 from .cli.main import cli
-
 
 args = sys.argv
 if '--help' in args or len(args) == 1:
