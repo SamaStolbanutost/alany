@@ -1,2 +1,0 @@
-[flake8]
-per-file-ignores = __main__.py:F401

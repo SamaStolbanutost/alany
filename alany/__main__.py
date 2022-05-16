@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
-from .cli.alany import run as rn
-from .cli.esobyte import esobyte, run
+from .cli.alany import run as rn  # noqa
+from .cli.esobyte import esobyte, run  # noqa
 from .cli.main import cli
 
 args = sys.argv
