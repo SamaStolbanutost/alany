@@ -1,6 +1,6 @@
 from typing import List
 import math
-from .memory import Memory, Data, parse_value
+from .memory import Memory, Data
 from .error import Error
 from .result import Result
 from .functions import remove_all_space, is_string
@@ -24,33 +24,8 @@ class Node(object):
         args = args.split(')')[0].split(',')
         return args
 
-    def get_value(self, variable: str, file: str = None) -> any:
-        try:
-            ends = variable[-1]
-        except Exception:
-            ends = ''
-        if self.memory.in_memory(variable.split('(')[0]) and ends == ')':
-            node: Node = self.memory.get_var(variable.split('(')[0]).value
-
-            args_names = node.get_args()
-            args = variable.split('(')[1][:-1].split(',')
-            for i in range(len(args)):
-                value = self.get_value(args[i])
-                var_name = args_names[i]
-                node.memory.add_var(value=value, var_name=var_name)
-
-            return node.run_children(file).value
-        elif self.memory.in_memory(variable.split('[')[0]) and ends == ']':
-            var = self.memory.get_var(variable.split('[')[0])
-            val = self.get_value(variable.split('[')[1][:-1])
-            var = var.get_list_value(val)
-            if isinstance(var, Data):
-                return var.value
-            else:
-                return var
-        else:
-            val = parse_value(variable, self.memory)
-            return val
+    def get_value(self, variable: str, file: str = '') -> any:
+        return self.memory.get_value(variable, file)
 
     def set_value(self, variable: str, value: any, g=True) -> None:
         if isinstance(value, Data):

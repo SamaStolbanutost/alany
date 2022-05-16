@@ -42,7 +42,7 @@ class Memory(object):
         else:
             return parse_value(var_name, self)
 
-    def get_value(self, variable: str, file: str = None) -> any:
+    def get_value(self, variable: str, file: str = '') -> any:
         from .node import Node
 
         try:
