@@ -1,10 +1,9 @@
 array map = 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1;
-len len map;
 var cycles = 25;
 
 print map \n;
 
-def gen {
+def gen(arg_1, arg_2, arg_3) {
     var res = 1;
     if (arg_1 == 1) {
         if (arg_2 == 1) {
@@ -25,29 +24,31 @@ def gen {
             }
         }
     }
+    return res;
 }
 
-def cycle {
+def cycle(old_map) {
     array new_map = none;
+    len len old_map;
 
     var i = 0;
     repeat (len) {
         sub i1 i 1;
         add i2 i 1;
-        var arg_1 = map[i1];
-        var arg_2 = map[i];
-        var arg_3 = map[i2];
+        var arg_1 = old_map[i1];
+        var arg_2 = old_map[i];
+        var arg_3 = old_map[i2];
 
-        runfun gen;
-        append new_map res;
+        var result = gen(arg_1, arg_2, arg_3);
+        append new_map result;
 
         add i i 1;
     }
-    var map = new_map;
 
-    print map \n;
+    print new_map \n;
+    return new_map;
 }
 
 repeat (cycles) {
-    runfun cycle;
+    var map = cycle(map);
 }

@@ -5,4 +5,4 @@ def print(a, b) {
 var d = 10;
 var f = 13;
 
-runfun print d f;
+print(d, f);

@@ -5,10 +5,10 @@ def read(path) {
     print value \n;
 }
 
-runfun read path;
+read(path);
 
 var value = 'Bye!';
 file write path value;
-runfun read path;
+read(path);
 
 file write path 'Hello!';

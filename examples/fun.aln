@@ -1,4 +1,4 @@
-def sum {
+def sum(a, b) {
     convert int a;
     convert int b;
     add c a b;
@@ -7,6 +7,6 @@ var sum_2 = sum;
 
 var a = input;
 var b = input;
-runfun sum_2;
+sum_2(a, b);
 
 print c \n;

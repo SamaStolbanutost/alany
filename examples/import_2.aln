@@ -1,5 +1,5 @@
 print 'file_2';
 
-def test {
+def test() {
     print 'Hello!' \n;
 }

@@ -1,5 +1,6 @@
 from .main import Main
 
+
 def lines_input(text):
     contents = []
     while True:
@@ -9,6 +10,7 @@ def lines_input(text):
             break
         contents.append(line)
     return '\n'.join(contents)
+
 
 class Interpreter():
     def __init__(self):
@@ -23,7 +25,7 @@ class Interpreter():
     def run(self) -> None:
         file = '/'
         memory = self.get_node().memory
-        
+
         while True:
             code = lines_input('>>> ')
             main = Main(code)
