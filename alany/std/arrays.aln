@@ -1,0 +1,4 @@
+def len(array) {
+    len ln array;
+    return ln;
+}

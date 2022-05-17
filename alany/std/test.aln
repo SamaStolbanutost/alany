@@ -1,0 +1,5 @@
+import main;
+
+var in = 'Text: ';
+var text = input(in);
+print(text);

@@ -1,8 +1,9 @@
-def input {
-    print arg;
+def input(text) {
+    print text;
     var out = input;
+    return out;
 }
 
-def print {
-    print arg \n;
+def print(text) {
+    print text \n;
 }
