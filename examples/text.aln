@@ -1,0 +1,5 @@
+var a = input;
+var b = input;
+
+add c a b;
+print c \n;

@@ -3,7 +3,7 @@ import math
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
-from .functions import remove_all_space, is_string
+from .functions import remove_all_space, is_string, remove_s, to_s
 
 
 class Node(object):
@@ -114,14 +114,14 @@ class Node(object):
                 else:
                     self.set_value(commands_w[1], [])
         elif commands[0] == 'add':
-            a = self.get_value(commands[2])
-            b = self.get_value(commands[3])
-            is_a_int = isinstance(a, int) or isinstance(a, float)
-            is_b_int = isinstance(b, int) or isinstance(b, float)
-            if not (is_a_int and is_b_int):
-                Error.Runtime.not_a_number(a, b, fun='+')
-                return Result(status=0)
-            self.set_value(commands[1], a+b)
+            a = remove_s(self.get_value(commands[2]))
+            b = remove_s(self.get_value(commands[3]))
+            val = a + b
+
+            if isinstance(val, str):
+                val = to_s(val)
+
+            self.set_value(commands[1], val)
         elif commands[0] == 'sub':
             a = self.get_value(commands[2])
             b = self.get_value(commands[3])
