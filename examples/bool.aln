@@ -1,0 +1,8 @@
+var a = input;
+var b = input;
+
+var c = a == b;
+
+if (c) {
+    print 'Equals' \n;
+}

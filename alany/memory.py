@@ -8,6 +8,7 @@ class Memory(object):
         self.parent: Memory = parent
         self.children: List[Memory] = children
         self.variables: Dict[str, Data] = {}
+        self.block = False
 
     def add_var(self, value: any, var_name: str):
         self.variables[var_name] = Data(memory=self,
@@ -15,7 +16,7 @@ class Memory(object):
                                         var_name=var_name)
 
     def add_global_var(self, value: any, var_name: str):
-        if self.parent is not None:
+        if self.parent is not None and not self.block:
             self.parent.add_global_var(value=value, var_name=var_name)
         else:
             self.add_var(value=value, var_name=var_name)
@@ -84,6 +85,30 @@ class Memory(object):
             val = parse_value(variable, self)
             return val
 
+    def get_bool_value(self, expression: str) -> bool:
+        if '==' in expression:
+            expression = expression.replace('==', ' ').split(' ')
+            first_value = self.get_value(expression[0])
+            second_value = self.get_value(expression[1])
+            return first_value == second_value
+        elif '!=' in expression:
+            expression = expression.replace('!=', ' ').split(' ')
+            first_value = self.get_value(expression[0])
+            second_value = self.get_value(expression[1])
+            return first_value != second_value
+        elif '>' in expression:
+            expression = expression.replace('>', ' ').split(' ')
+            first_value = self.get_value(expression[0])
+            second_value = self.get_value(expression[1])
+            return first_value > second_value
+        elif '<' in expression:
+            expression = expression.replace('<', ' ').split(' ')
+            first_value = self.get_value(expression[0])
+            second_value = self.get_value(expression[1])
+            return first_value < second_value
+        elif self.in_memory(expression):
+            return self.get_var(expression).value
+
 
 class Data(object):
     def __init__(self, memory, value: any = None, var_name: str = None):
@@ -119,10 +144,17 @@ class Data(object):
                     elif isinstance(value, Node):
                         self.type = 'node'
                     elif isinstance(value, dict):
-                        node: Node = value['node']
-                        self.mem = node.memory
-                        self._value = value['vars']
-                        self.type = 'class'
+                        try:
+                            node: Node = value['node']
+                            self.mem = node.memory
+                            self.type = 'class'
+                        except Exception:
+                            value = value
+                            self.type = 'class'
+                    elif value is not None and \
+                            ('=' in value or '>' in value or '<' in value):
+                        value = self.memory.get_bool_value(value)
+                        self.type = 'bool'
 
         if self.type is None:
             value = remove_start_spaces(value)

@@ -3,7 +3,8 @@ import math
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
-from .functions import remove_all_space, is_string, remove_s, to_s
+from .functions import remove_all_space, is_string, remove_s, to_s, \
+                       remove_start_spaces
 
 
 class Node(object):
@@ -43,26 +44,7 @@ class Node(object):
                 self.memory.add_global_var(value, variable)
 
     def get_bool_value(self, expression: str) -> bool:
-        if '==' in expression:
-            expression = expression.replace('==', ' ').split(' ')
-            first_value = self.get_value(expression[0])
-            second_value = self.get_value(expression[1])
-            return first_value == second_value
-        elif '!=' in expression:
-            expression = expression.replace('!=', ' ').split(' ')
-            first_value = self.get_value(expression[0])
-            second_value = self.get_value(expression[1])
-            return first_value != second_value
-        elif '>' in expression:
-            expression = expression.replace('>', ' ').split(' ')
-            first_value = self.get_value(expression[0])
-            second_value = self.get_value(expression[1])
-            return first_value > second_value
-        elif '<' in expression:
-            expression = expression.replace('<', ' ').split(' ')
-            first_value = self.get_value(expression[0])
-            second_value = self.get_value(expression[1])
-            return first_value < second_value
+        return self.memory.get_bool_value(expression)
 
     def run(self, file: str) -> Result:
         commands = self.command.split(' ')
@@ -84,14 +66,16 @@ class Node(object):
         elif commands[0] == 'putchar':
             char = chr(int(float(self.get_value(' '.join(commands[1:])))))
             print(char, end='')
-        elif commands_w[0] == 'var':
-            if commands_w[1] == 'local':
-                var_name = commands_w[2]
-                value = self.get_value(' '.join(commands_w[3:]))
+        elif commands[0] == 'var':
+            if commands[1] == 'local':
+                var_name = commands[2].split('=')[0]
+                value = self.get_value(' '.join(commands[3:]))
                 self.set_value(var_name, value, g=False)
             else:
-                var_name = commands_w[1]
-                value = self.get_value(' '.join(commands_w[2:]))
+                var_name = commands[1].split('=')[0]
+                val = '='.join(self.command.split('=')[1:])
+                val = remove_start_spaces(val)
+                value = self.get_value(val)
                 self.set_value(var_name, value, file)
         elif commands_w[0] == 'len':
             var_name = commands_w[1]
@@ -197,10 +181,13 @@ class Node(object):
         elif commands_c[0] == 'class':
             var_name = commands[1].split('(')[0]
 
+            self.memory.block = True
             self.run_children(file)
 
             value = self.memory.variables
             value = {'vars': value, 'node': self}
+            self.memory.block = False
+
             self.memory.add_global_var(value=value, var_name=var_name)
         elif commands[0] == 'append':
             value = self.get_value(commands[2])
