@@ -1,0 +1,9 @@
+class Test() {
+    var text = 'Hello,';
+
+    def get_world() {
+        return 'world!';
+    }
+}
+
+print Test.text Test.get_world() \n;

@@ -194,6 +194,14 @@ class Node(object):
         elif commands_c[0] == 'def':
             var_name = commands[1].split('(')[0]
             self.memory.add_global_var(value=self, var_name=var_name)
+        elif commands_c[0] == 'class':
+            var_name = commands[1].split('(')[0]
+
+            self.run_children(file)
+
+            value = self.memory.variables
+            value = {'vars': value, 'node': self}
+            self.memory.add_global_var(value=value, var_name=var_name)
         elif commands[0] == 'append':
             value = self.get_value(commands[2])
             self.memory.get_var(commands[1])._value.append(value)

@@ -25,7 +25,8 @@ class Parser(object):
             if con and i > con_to:
                 con = False
             command = remove_space(command)
-            if command.split(' ')[0] in ['if', 'repeat', 'while', 'def']:
+            if command.split(' ')[0] in ['if', 'repeat', 'while', 'def',
+                                         'class']:
                 self.memory = Memory(parent=self.memory)
                 node = Node(command, index=i, memory=self.memory,
                             is_interpreter=self.is_interpreter)

@@ -27,16 +27,28 @@ class Memory(object):
             self.parent.set_var(value=value, var_name=var_name)
 
     def in_memory(self, var_name: str):
-        if var_name in self.variables:
-            return True
-        elif self.parent is not None:
-            return self.parent.in_memory(var_name)
-        else:
+        try:
+            var_name = var_name.split('.')[0]
+
+            if var_name in self.variables:
+                return True
+            elif self.parent is not None:
+                return self.parent.in_memory(var_name)
+            else:
+                return False
+        except Exception:
             return False
 
     def get_var(self, var_name: str):
+        var_names = var_name.split('.')
+        var_name = var_names[0]
+
         if var_name in self.variables:
-            return self.variables[var_name]
+            if len(var_names) == 1:
+                return self.variables[var_name]
+            else:
+                var = '.'.join(var_names[1:])
+                return self.variables[var_name].mem.get_var(var)
         elif self.parent is not None:
             return self.parent.get_var(var_name=var_name)
         else:
@@ -44,7 +56,6 @@ class Memory(object):
 
     def get_value(self, variable: str, file: str = '') -> any:
         from .node import Node
-
         try:
             ends = variable[-1]
         except Exception:
@@ -54,10 +65,11 @@ class Memory(object):
 
             args_names = node.get_args()
             args = variable.split('(')[1][:-1].split(',')
-            for i in range(len(args)):
-                value = self.get_value(args[i])
-                var_name = args_names[i]
-                node.memory.add_var(value=value, var_name=var_name)
+            for arg, arg_name in zip(args, args_names):
+                if not arg == '' or not arg_name == '':
+                    value = self.get_value(arg)
+                    var_name = arg_name
+                    node.memory.add_var(value=value, var_name=var_name)
 
             return node.run_children(file).value
         elif self.in_memory(variable.split('[')[0]) and ends == ']':
@@ -106,6 +118,11 @@ class Data(object):
                                 value[i] = Data(memory=self.memory, value=dat)
                     elif isinstance(value, Node):
                         self.type = 'node'
+                    elif isinstance(value, dict):
+                        node: Node = value['node']
+                        self.mem = node.memory
+                        self._value = value['vars']
+                        self.type = 'class'
 
         if self.type is None:
             value = remove_start_spaces(value)
