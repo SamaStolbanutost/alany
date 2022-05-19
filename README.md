@@ -69,6 +69,16 @@ python3 -m alany --help
 @Vlad100
 
 ## Version History
+* 0.1.1
+    * Added interactive shell
+    * Added bool type
+    * Added classes
+    * Added bool.aln and class.aln examples
+    * Added string folding
+    * Added ALON concept
+    * Bug fixes
+    * Code formatted according to PEP8
+    * Refactoring
 * 0.1.0
     * Added arguments to functions
     * Added return command
