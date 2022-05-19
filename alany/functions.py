@@ -3,11 +3,14 @@ def remove_all_space(string: str):
 
 
 def is_string(str: str):
-    if str[0] == '"' and str[-1] == '"':
-        return True
-    elif str[0] == "'" and str[-1] == "'":
-        return True
-    return False
+    try:
+        if str[0] == '"' and str[-1] == '"':
+            return True
+        elif str[0] == "'" and str[-1] == "'":
+            return True
+        return False
+    except Exception:
+        return False
 
 
 def add_str(str: str):

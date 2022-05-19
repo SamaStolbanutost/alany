@@ -1,5 +1,6 @@
 from typing import List
 import math
+import random
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
@@ -192,22 +193,6 @@ class Node(object):
         elif commands[0] == 'append':
             value = self.get_value(commands[2])
             self.memory.get_var(commands[1])._value.append(value)
-        elif len(commands[0].split('(')) > 0 and \
-                self.memory.in_memory(commands[0].split('(')[0]):
-
-            var = self.memory.get_var(commands[0].split('(')[0])
-            if var.type == 'node':
-                node: Node = var.value
-                args_names = node.get_args()
-                args = ''.join(''.join(commands[0:]).split('(')[1:])
-                args = args.split(')')[0].split(',')
-                for i in range(len(args)):
-                    node.memory.add_var(value=self.get_value(args[i]),
-                                        var_name=args_names[i])
-                node.run_children(file)
-            else:
-                value = self.get_value(' '.join(commands[1:]))
-                self.set_value(commands[0], value)
         elif commands[0] == 'convert':
             if commands[1] == 'int':
                 value = self.memory.get_var(commands[2]).value
@@ -258,6 +243,24 @@ class Node(object):
 
                 with open(path, 'w') as file:
                     file.write(value)
+        elif commands[0] == 'random':
+            self.memory.add_var(var_name=commands[1], value=random.random())
+        elif len(commands[0].split('(')) > 0 and \
+                self.memory.in_memory(commands[0].split('(')[0]):
+
+            var = self.memory.get_var(commands[0].split('(')[0])
+            if var.type == 'node':
+                node: Node = var.value
+                args_names = node.get_args()
+                args = ''.join(''.join(commands[0:]).split('(')[1:])
+                args = args.split(')')[0].split(',')
+                for i in range(len(args)):
+                    node.memory.add_var(value=self.get_value(args[i]),
+                                        var_name=args_names[i])
+                node.run_children(file)
+            else:
+                value = self.get_value(' '.join(commands[1:]))
+                self.set_value(commands[0], value)
         elif self.is_interpreter is True:
             values = []
             for i in commands:

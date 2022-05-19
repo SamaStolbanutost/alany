@@ -49,9 +49,13 @@ class Memory(object):
                 return self.variables[var_name]
             else:
                 var = '.'.join(var_names[1:])
-                return self.variables[var_name].mem.get_var(var)
+                return self.get_var(var_name).mem.get_var(var)
         elif self.parent is not None:
-            return self.parent.get_var(var_name=var_name)
+            if len(var_names) == 1:
+                return self.parent.get_var(var_name=var_name)
+            else:
+                var = '.'.join(var_names[1:])
+                return self.parent.get_var(var_name).mem.get_var(var)
         else:
             return parse_value(var_name, self)
 

@@ -1,0 +1,14 @@
+class Random() {
+    def randint(n) {
+        add n n 1;
+        random rand;
+        mul rand rand n;
+        convert int rand;
+        return rand;
+    }
+}
+var random = Random;
+
+repeat (100) {
+    print random.randint(10) \n;
+}
