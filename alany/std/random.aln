@@ -6,9 +6,14 @@ class Random() {
         convert int rand;
         return rand;
     }
+
+    def random() {
+        random rand;
+        return rand;
+    }
 }
 var random = Random;
 
 repeat (100) {
-    print random.randint(10) \n;
+    print random.random() \n;
 }
