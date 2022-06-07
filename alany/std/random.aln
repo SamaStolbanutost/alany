@@ -12,8 +12,5 @@ class Random() {
         return rand;
     }
 }
-var random = Random;
 
-repeat (100) {
-    print random.random() \n;
-}
+var random = Random;

@@ -59,3 +59,12 @@ def remove_s(string: str):
 
 def to_s(string: str):
     return '"' + string + '"'
+
+
+def parse_args(args):
+    parsed_args = []
+    for arg in args:
+        if arg != '':
+            parsed_args.append(arg)
+
+    return parsed_args

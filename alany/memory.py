@@ -1,4 +1,5 @@
 from typing import List, Dict
+import copy
 from .error import Error
 from .functions import add_str, remove_start_spaces, is_string, to_len
 
@@ -11,9 +12,16 @@ class Memory(object):
         self.block = False
 
     def add_var(self, value: any, var_name: str):
-        self.variables[var_name] = Data(memory=self,
-                                        value=clear_parse_value(value, self),
-                                        var_name=var_name)
+        var_names = var_name.split('.')
+
+        if len(var_names) == 1:
+            value = clear_parse_value(value, self)
+            self.variables[var_name] = Data(memory=self,
+                                            value=value,
+                                            var_name=var_name)
+        else:
+            var = self.get_var(var_names[0])
+            var.mem.add_var(value=value, var_name='.'.join(var_names[1:]))
 
     def add_global_var(self, value: any, var_name: str):
         if self.parent is not None and not self.block:
@@ -49,15 +57,18 @@ class Memory(object):
                 return self.variables[var_name]
             else:
                 var = '.'.join(var_names[1:])
-                return self.get_var(var_name).mem.get_var(var)
+                variable = self.get_var(var_name)
+                return variable.mem.get_var(var)
         elif self.parent is not None:
-            if len(var_names) == 1:
-                return self.parent.get_var(var_name=var_name)
-            else:
-                var = '.'.join(var_names[1:])
-                return self.parent.get_var(var_name).mem.get_var(var)
+            return self.parent.get_var('.'.join(var_names))
         else:
             return parse_value(var_name, self)
+
+    def get_global_memory(self):
+        if self.parent is not None:
+            return self.parent.get_global_memory()
+        else:
+            return self
 
     def get_value(self, variable: str, file: str = '') -> any:
         from .node import Node
@@ -66,17 +77,23 @@ class Memory(object):
         except Exception:
             ends = ''
         if self.in_memory(variable.split('(')[0]) and ends == ')':
-            node: Node = self.get_var(variable.split('(')[0]).value
+            callable = self.get_var(variable.split('(')[0]).value
+            if isinstance(callable, Node):
+                node = callable
 
-            args_names = node.get_args()
-            args = variable.split('(')[1][:-1].split(',')
-            for arg, arg_name in zip(args, args_names):
-                if not arg == '' or not arg_name == '':
-                    value = self.get_value(arg)
-                    var_name = arg_name
-                    node.memory.add_var(value=value, var_name=var_name)
+                args_names = node.get_args()
+                args = variable.split('(')[1][:-1].split(',')
+                for arg, arg_name in zip(args, args_names):
+                    if not arg == '' or not arg_name == '':
+                        value = self.get_value(arg)
+                        var_name = arg_name
+                        node.memory.add_var(value=value, var_name=var_name)
 
-            return node.run_children(file).value
+                return node.run_children(file).value
+            elif isinstance(callable, dict):
+                new_object = copy.deepcopy(callable)
+
+                return new_object
         elif self.in_memory(variable.split('[')[0]) and ends == ']':
             var = self.get_var(variable.split('[')[0])
             val = self.get_value(variable.split('[')[1][:-1])
@@ -115,7 +132,8 @@ class Memory(object):
 
 
 class Data(object):
-    def __init__(self, memory, value: any = None, var_name: str = None):
+    def __init__(self, memory, value: any = None, var_name: str = None,
+                 skip_unknown: bool = False):
         from .node import Node
 
         self.var_name = str(var_name)
@@ -167,8 +185,13 @@ class Data(object):
                 self._value = var._value
                 self.type = var.type
                 self.var_name = var.var_name
+            elif skip_unknown:
+                self._value = None
+                self.type = 'variable'
+                self.var_name = value
             else:
                 Error.Runtime.unknow_type(value)
+                raise ValueError
         else:
             self._value: any = value
 
@@ -266,5 +289,5 @@ def clear_parse_value(value: any, memory):
     except Exception:
         pass
     finally:
-        value = Data(value=value, memory=memory).value
+        value = Data(value=value, memory=memory, skip_unknown=True).value
     return value

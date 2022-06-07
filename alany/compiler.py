@@ -16,6 +16,6 @@ class Compiler():
         main = Main(code)
         result = main.run(file)
         if result.is_success():
-            print(f'Program: Completed in {time.time()-tm} seconds')
+            print(f'\nProgram: Completed in {time.time()-tm} seconds')
         else:
             Error.Programm.stop()

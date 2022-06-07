@@ -1,0 +1,10 @@
+class Object() {
+    var a = 1;
+}
+
+var object_1 = Object();
+var object_2 = Object();
+
+var object_1.a = 2;
+
+print object_1.a object_2.a \n;

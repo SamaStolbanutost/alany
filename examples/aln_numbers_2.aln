@@ -1,0 +1,23 @@
+def next(n) {
+    add n n 1;
+    mul n n 2;
+    return n;
+}
+
+def next_2(n) {
+    add n n 1;
+    mul n n 3;
+    var n = next(n);
+    return n;
+}
+
+def print(n) {
+    print n \n;
+}
+
+var n = 0;
+repeat (100) {
+    print(n);
+    var n = next_2(n);
+}
+print(n);

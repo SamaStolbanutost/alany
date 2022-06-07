@@ -1,11 +1,12 @@
 from typing import List
 import math
 import random
+import os
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
 from .functions import remove_all_space, is_string, remove_s, to_s, \
-                       remove_start_spaces
+                       remove_start_spaces, parse_args
 
 
 class Node(object):
@@ -24,7 +25,7 @@ class Node(object):
         args = remove_all_space(self.command)
         args = args.split('(')[1]
         args = args.split(')')[0].split(',')
-        return args
+        return parse_args(args)
 
     def get_value(self, variable: str, file: str = '') -> any:
         return self.memory.get_value(variable, file)
@@ -33,7 +34,11 @@ class Node(object):
         if isinstance(value, Data):
             value = value.value
         if self.memory.in_memory(variable):
-            self.memory.get_var(variable).value = value
+            var = self.memory.get_var(variable)
+            if var is not None:
+                var.value = value
+            else:
+                self.memory.add_var(var_name=variable, value=value)
         elif variable[-1] == ']':
             var = self.memory.get_var(variable.split('[')[0])
             index = self.get_value(variable.split('[')[1][:-1])
@@ -215,6 +220,9 @@ class Node(object):
         elif commands[0] == 'import':
             from .parser import Lexer, Parser
             path = commands[1]
+            if path[0] == '~':
+                path = path[1:]
+                path = os.environ['ALANY_PATH'] + 'alany/std/' + path + ".aln"
             if not path[0] == '/':
                 path = "/".join(file.split("/")[:-1]) + "/" + path + ".aln"
             with open(path, 'r') as fl:
@@ -245,6 +253,28 @@ class Node(object):
                     file.write(value)
         elif commands[0] == 'random':
             self.memory.add_var(var_name=commands[1], value=random.random())
+        elif commands[0] == 'pygame':
+            import pygame
+
+            if commands[1] == 'init':
+                pygame.init()
+                mem = self.memory.get_global_memory()
+                mem.variables['__pygame__'] = {}
+            elif commands[1] == 'quit':
+                pygame.quit()
+            elif commands[1] == 'display':
+                if commands[2] == 'init':
+                    pygame.display.init()
+                elif commands[2] == 'set_mode':
+                    a = self.get_value(commands[3])
+                    b = self.get_value(commands[4])
+                    mem = self.memory.get_global_memory()
+                    mem.variables['__pygame__']['display'] = \
+                        pygame.display.set_mode((a, b))
+                elif commands[2] == 'set_caption':
+                    val = self.get_value(' '.join(commands[3:]))[1:-1]
+                    pygame.display.set_caption(val)
+                    pygame.event.pump()
         elif len(commands[0].split('(')) > 0 and \
                 self.memory.in_memory(commands[0].split('(')[0]):
 
@@ -254,6 +284,7 @@ class Node(object):
                 args_names = node.get_args()
                 args = ''.join(''.join(commands[0:]).split('(')[1:])
                 args = args.split(')')[0].split(',')
+                args = parse_args(args)
                 for i in range(len(args)):
                     node.memory.add_var(value=self.get_value(args[i]),
                                         var_name=args_names[i])

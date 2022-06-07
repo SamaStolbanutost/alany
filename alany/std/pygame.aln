@@ -1,0 +1,45 @@
+class PyGame() {
+    def init() {
+        pygame init;
+    }
+
+    def quit() {
+        pygame quit;
+    }
+
+    class Display() {
+        def init() {
+            pygame display init;
+        }
+
+        def set_mode(width, height) {
+            pygame display set_mode width height;
+        }
+
+        def set_caption(caption) {
+            pygame display set_caption caption;
+        }
+    }
+    var display = Display;
+}
+
+class Event() { 
+    var type = 0;
+}
+var pygame = PyGame;
+
+/ var event = Event();
+/ var event.a = 13;
+
+/ print event.a \n;
+
+/ pygame.init();
+
+/ pygame.display.init();
+/ pygame.display.set_mode(1000, 100);
+/ var caption = 'Hello, pygame!';
+/ pygame.display.set_caption(caption);
+
+/ var b = input;
+
+/ pygame.quit();
