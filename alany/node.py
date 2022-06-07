@@ -222,9 +222,16 @@ class Node(object):
             path = commands[1]
             if path[0] == '~':
                 path = path[1:]
-                path = os.environ['ALANY_PATH'] + 'alany/std/' + path + ".aln"
-            if not path[0] == '/':
-                path = "/".join(file.split("/")[:-1]) + "/" + path + ".aln"
+                paths = os.environ['ALANY_PATH'].split(':')
+                for p in paths:
+                    if os.path.exists(p + '/' + path + '.aln'):
+                        path = p + '/' + path + '.aln'
+                        break
+                    elif os.path.exists(p + '/' + path + '/' + '__main__.aln'):
+                        path = p + '/' + path + '/' + '__main__.aln'
+                        break
+            elif not path[0] == '/':
+                path = '/'.join(file.split('/')[:-1]) + '/' + path + '.aln'
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)
