@@ -26,8 +26,7 @@ def update(name, link=None):
 
 
 def remove(name):
-    # clear(f'{os.path.dirname(__file__)}/modules/{name}')
-    pass
+    clear(f'{os.path.dirname(__file__)}/modules/{name}')
 
 
 update('alany', 'https://github.com/anony-oss/alany.git')
