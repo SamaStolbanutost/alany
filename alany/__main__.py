@@ -2,6 +2,7 @@
 import sys
 from .cli.alany import run as rn  # noqa
 from .cli.esobyte import esobyte, run  # noqa
+from .cli.pia import install, update, remove # noqa
 from .cli.main import cli
 
 args = sys.argv

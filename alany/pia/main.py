@@ -37,7 +37,7 @@ def update(name, link=None):
 
 
 def remove(name):
-    shutil.rmtree(f'{os.path.dirname(__file__)}/modules/{name}')
+    shutil.rmtree(f'{os.path.dirname(__file__)}/modules/{name}/')
 
 
-install('alany')
+# install('alany')
