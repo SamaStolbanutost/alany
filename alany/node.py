@@ -222,7 +222,8 @@ class Node(object):
             path = commands[1]
             if path[0] == '~':
                 path = path[1:]
-                paths = os.environ['ALANY_PATH'].split(':')
+                paths = os.getenv('ALANY_PATH').split(':')
+                print(paths)
                 for p in paths:
                     if os.path.exists(p + '/' + path + '.aln'):
                         path = p + '/' + path + '.aln'
