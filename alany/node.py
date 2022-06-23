@@ -6,7 +6,7 @@ from .memory import Memory, Data
 from .error import Error
 from .result import Result
 from .functions import remove_all_space, is_string, remove_s, to_s, \
-                       remove_start_spaces, parse_args
+                       remove_start_spaces, parse_args, add_str
 
 
 class Node(object):
@@ -216,7 +216,8 @@ class Node(object):
                 self.memory.get_var(commands[2]).type = 'str'
                 self.memory.get_var(commands[2]).value = str(value)
         elif commands[0] == 'type':
-            print(self.memory.get_var(commands[1]).type)
+            type = self.memory.get_var(commands[1]).type
+            self.memory.add_var(add_str(type), commands[2])
         elif commands[0] == 'import':
             from .parser import Lexer, Parser
             path = commands[1]
