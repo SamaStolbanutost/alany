@@ -12,10 +12,10 @@ class Compiler():
             self.run(fl.read(), file=file)
 
     def run(self, code: str, file: str = '/') -> None:
-        tm = time.time()
+        tm = time.perf_counter()
         main = Main(code)
         result = main.run(file)
         if result.is_success():
-            print(f'\nProgram: Completed in {time.time()-tm} seconds')
+            print(f'\nProgram: Completed in {time.perf_counter()-tm} seconds')
         else:
             Error.Programm.stop()

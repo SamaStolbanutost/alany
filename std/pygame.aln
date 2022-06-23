@@ -19,8 +19,19 @@ class PyGame() {
         def set_caption(caption) {
             pygame display set_caption caption;
         }
+
+        def update() {
+            pygame display update;
+        }
     }
     var display = Display;
+
+    class Draw() {
+        def rect(r, g, b, x, y, width, height) {
+            pygame draw rect r g b x y width height;
+        }
+    }
+    var draw = Draw;
 }
 
 class Event() { 
@@ -28,18 +39,21 @@ class Event() {
 }
 var pygame = PyGame;
 
-/ var event = Event();
-/ var event.a = 13;
+var event = Event();
+var event.a = 13;
 
-/ print event.a \n;
+print event.a \n;
 
-/ pygame.init();
+pygame.init();
 
-/ pygame.display.init();
-/ pygame.display.set_mode(1000, 100);
-/ var caption = 'Hello, pygame!';
-/ pygame.display.set_caption(caption);
+pygame.display.init();
+pygame.display.set_mode(1000, 100);
+var caption = 'Hello, pygame!';
+pygame.display.set_caption(caption);
+pygame.draw.rect(255, 255, 255, 10, 10, 10, 10);
+pygame.display.update();
 
-/ var b = input;
 
-/ pygame.quit();
+var b = input;
+
+pygame.quit();

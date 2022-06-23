@@ -284,6 +284,21 @@ class Node(object):
                     val = self.get_value(' '.join(commands[3:]))[1:-1]
                     pygame.display.set_caption(val)
                     pygame.event.pump()
+                elif commands[2] == 'update':
+                    pygame.display.update()
+            elif commands[1] == 'draw':
+                if commands[2] == 'rect':
+                    r = self.get_value(commands[3])
+                    g = self.get_value(commands[4])
+                    b = self.get_value(commands[5])
+                    x = self.get_value(commands[6])
+                    y = self.get_value(commands[7])
+                    width = self.get_value(commands[8])
+                    height = self.get_value(commands[9])
+                    mem = self.memory.get_global_memory()
+                    pygame.draw.rect(mem.variables['__pygame__']['display'],
+                                     pygame.Color(r, g, b), pygame.Rect(x, y,
+                                     width, height))
         elif len(commands[0].split('(')) > 0 and \
                 self.memory.in_memory(commands[0].split('(')[0]):
 
