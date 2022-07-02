@@ -64,6 +64,18 @@ List of commands.
 python3 -m alany --help
 ```
 
+## Troubleshooting
+
+* Windows
+      * Erorr.
+        ```
+        ERROR: Command errored out with exit status 1
+        ```
+        Solve.
+        ```
+        pip install pipwin && pipwin install -e alany
+        ```
+
 ## Authors
 
 @Vlad100
