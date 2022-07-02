@@ -91,7 +91,16 @@ class Memory(object):
 
                 return node.run_children(file).value
             elif isinstance(callable, dict):
+                vars = callable['node'].memory.get_global_memory().variables
+                is_alany = '__alany__' in vars
+                if is_alany:
+                    main = vars['__alany__']
+                    vars.pop('__alany__')
                 new_object = copy.deepcopy(callable)
+                if is_alany:
+                    vars['__alany__'] = main
+                    new_object['node'].memory.get_global_memory().variables \
+                        = vars
 
                 return new_object
         elif self.in_memory(variable.split('[')[0]) and ends == ']':

@@ -1,0 +1,120 @@
+import ~pygame;
+
+pygame.init();
+
+pygame.display.init();
+pygame.display.set_mode(1024, 768);
+var caption = 'Pong';
+pygame.display.set_caption(caption);
+var y = 10;
+var y2 = 10;
+var bx = 512;
+var by = 384;
+var vx = -2;
+var vy = -2;
+var score_1 = 0;
+var score_2 = 0;
+
+while (1 == 1) {
+    pygame.draw.rect(0, 0, 0, 0, 0, 1024, 768);
+    pygame.draw.rect(255, 255, 255, 10, y, 10, 300);
+    pygame.draw.rect(255, 255, 255, 1004, y2, 10, 300);
+    pygame.draw.rect(255, 255, 255, bx, by, 10, 10);
+    pygame.display.update();
+    var events = pygame.event.get();
+    len ln events;
+
+    var i = 0;
+    repeat ln {
+        var event = events[i];
+
+        if (event.key == 119) {
+            sub y y 20;
+        }
+        if (event.key == 115) {
+            add y y 20;
+        }
+        if (event.key == 1073741906) {
+            sub y2 y2 10;
+        }
+        if (event.key == 1073741905) {
+            add y2 y2 10;
+        }
+
+        add i i 1;
+    }
+    if (y < 0) {
+        var y = 0;
+    }
+    if (y > 724) {
+        var y = 724;
+    }
+    if (y2 < 0) {
+        var y2 = 0;
+    }
+    if (y2 > 724) {
+        var y2 = 724;
+    }
+    if (by > 768) {
+        var vy = -2;
+    }
+    if (by < 0) {
+        var vy = 2;
+    }
+    if (bx < 20) {
+        sub temp by y;
+        if (temp < 300) {
+            if (temp > 0) {
+                var vx = 2;
+            }
+
+            if (temp < 0) {
+                add score_2 score_2 1;
+                var bx = 512;
+                var by = 384;
+                var vx = 2;
+                var vy = -2;
+            }
+        }
+
+        if (temp > 300) {
+            add score_2 score_2 1;
+            var bx = 512;
+            var by = 384;
+            var vx = 2;
+            var vy = -2;
+        }
+    }
+
+    if (bx > 994) {
+        sub temp by y2;
+        if (temp < 300) {
+            if (temp > 0) {
+                var vx = -2;
+            }
+
+            if (temp < 0) {
+                add score_1 score_1 1;
+                var bx = 512;
+                var by = 384;
+                var vx = -2;
+                var vy = -2;
+            }
+        }
+        
+        if (temp > 300) {
+            print temp \n;
+            add score_1 score_1 1;
+            var bx = 512;
+            var by = 384;
+            var vx = -2;
+            var vy = -2;
+        }
+    }
+
+    add bx bx vx;
+    add by by vy;
+    print score_1 score_2 \n;
+}
+
+pygame.quit();

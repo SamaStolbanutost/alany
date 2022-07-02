@@ -224,7 +224,7 @@ class Node(object):
             if path[0] == '~':
                 path = path[1:]
                 paths = os.getenv('ALANY_PATH').split(':')
-                print(paths)
+
                 for p in paths:
                     if os.path.exists(p + '/' + path + '.aln'):
                         path = p + '/' + path + '.aln'
@@ -268,7 +268,9 @@ class Node(object):
             if commands[1] == 'init':
                 pygame.init()
                 mem = self.memory.get_global_memory()
-                mem.variables['__pygame__'] = {}
+                if '__alany__' not in mem.variables:
+                    mem.variables['__alany__'] = {}
+                mem.variables['__alany__']['__pygame__'] = {}
             elif commands[1] == 'quit':
                 pygame.quit()
             elif commands[1] == 'display':
@@ -278,7 +280,7 @@ class Node(object):
                     a = self.get_value(commands[3])
                     b = self.get_value(commands[4])
                     mem = self.memory.get_global_memory()
-                    mem.variables['__pygame__']['display'] = \
+                    mem.variables['__alany__']['__pygame__']['display'] = \
                         pygame.display.set_mode((a, b))
                 elif commands[2] == 'set_caption':
                     val = self.get_value(' '.join(commands[3:]))[1:-1]
@@ -296,9 +298,29 @@ class Node(object):
                     width = self.get_value(commands[8])
                     height = self.get_value(commands[9])
                     mem = self.memory.get_global_memory()
-                    pygame.draw.rect(mem.variables['__pygame__']['display'],
-                                     pygame.Color(r, g, b), pygame.Rect(x, y,
-                                     width, height))
+                    pygame.draw.rect(mem.variables['__alany__']['__pygame__']
+                                     ['display'], pygame.Color(r, g, b),
+                                     pygame.Rect(x, y, width, height))
+            elif commands[1] == 'event':
+                if commands[2] == 'get':
+                    mem = self.memory.get_global_memory()
+                    mem.variables['__alany__']['__pygame__']['events'] \
+                        = pygame.event.get()
+                    ln = str(len(mem.variables['__alany__']['__pygame__']
+                                 ['events']))
+                    self.set_value(commands[3], ln)
+                elif commands[2] == 'poll':
+                    mem = self.memory.get_global_memory()
+                    events = mem.variables['__alany__']['__pygame__']['events']
+                    event = events[0]
+                    mem.variables['__alany__']['__pygame__']['events'].pop(0)
+
+                    self.set_value(commands[3], str(event.type))
+                    type = event.type
+                    if type == pygame.KEYDOWN or type == pygame.KEYUP:
+                        self.set_value(commands[4], str(event.key))
+                    else:
+                        self.set_value(commands[4], -1)
         elif len(commands[0].split('(')) > 0 and \
                 self.memory.in_memory(commands[0].split('(')[0]):
 

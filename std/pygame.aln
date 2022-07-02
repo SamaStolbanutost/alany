@@ -1,3 +1,8 @@
+class Event() { 
+    var type = 0;
+    var key = 0;
+}
+
 class PyGame() {
     def init() {
         pygame init;
@@ -32,28 +37,26 @@ class PyGame() {
         }
     }
     var draw = Draw;
-}
 
-class Event() { 
-    var type = 0;
+    class EventFunctions() {
+        def get() {
+            pygame event get ln;
+            array events = none;
+
+            type ln out;
+            repeat ln {
+                pygame event poll type key;
+
+                var ev = Event();
+                var ev.type = type;
+                var ev.key = key;
+
+                append events ev;
+            }
+
+            return events;
+        }
+    }
+    var event = EventFunctions;
 }
 var pygame = PyGame;
-
-var event = Event();
-var event.a = 13;
-
-print event.a \n;
-
-pygame.init();
-
-pygame.display.init();
-pygame.display.set_mode(1000, 100);
-var caption = 'Hello, pygame!';
-pygame.display.set_caption(caption);
-pygame.draw.rect(255, 255, 255, 10, 10, 10, 10);
-pygame.display.update();
-
-
-var b = input;
-
-pygame.quit();
