@@ -2,6 +2,9 @@ from typing import List
 import math
 import random
 import os
+import platform
+
+from itsdangerous import NoneAlgorithm
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
@@ -220,11 +223,22 @@ class Node(object):
             self.memory.add_var(add_str(type), commands[2])
         elif commands[0] == 'import':
             from .parser import Lexer, Parser
+            
             path = commands[1]
             if path[0] == '~':
                 path = path[1:]
                 paths = os.getenv('ALANY_PATH').split(':')
-
+                if platform.system() == 'Windows':
+                    p = None
+                    new_paths = []
+                    for path in paths:
+                    if p is None:
+                        p = path
+                    else:
+                        new_paths.append(p + path)
+                        p = None
+                    paths = new_paths
+                
                 for p in paths:
                     if os.path.exists(p + '/' + path + '.aln'):
                         path = p + '/' + path + '.aln'
