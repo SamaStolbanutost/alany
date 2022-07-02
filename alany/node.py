@@ -10,6 +10,11 @@ from .result import Result
 from .functions import remove_all_space, is_string, remove_s, to_s, \
                        remove_start_spaces, parse_args, add_str
 
+if platform.system() == 'Windows':
+    slash = '\\'
+else:
+    slash = '/'
+
 
 class Node(object):
     def __init__(self, command: str = '', children=None, index: int = 0,
@@ -239,14 +244,16 @@ class Node(object):
                     paths = new_paths
 
                 for p in paths:
-                    if os.path.exists(p + '/' + path + '.aln'):
-                        path = p + '/' + path + '.aln'
+                    if os.path.exists(p + slash + path + '.aln'):
+                        path = p + slash + path + '.aln'
                         break
-                    elif os.path.exists(p + '/' + path + '/' + '__main__.aln'):
-                        path = p + '/' + path + '/' + '__main__.aln'
+                    elif os.path.exists(p + slash + path + slash +
+                                        '__main__.aln'):
+                        path = p + slash + path + slash + '__main__.aln'
                         break
-            elif not path[0] == '/':
-                path = '/'.join(file.split('/')[:-1]) + '/' + path + '.aln'
+            elif not path[0] == slash:
+                path = slash.join(file.split(slash)[:-1]) + slash + path \
+                    + '.aln'
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)
