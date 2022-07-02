@@ -232,13 +232,13 @@ class Node(object):
                     p = None
                     new_paths = []
                     for path in paths:
-                    if p is None:
-                        p = path
-                    else:
-                        new_paths.append(p + path)
-                        p = None
+                        if p is None:
+                            p = path
+                        else:
+                            new_paths.append(p + path)
+                            p = None
                     paths = new_paths
-                
+
                 for p in paths:
                     if os.path.exists(p + '/' + path + '.aln'):
                         path = p + '/' + path + '.aln'
