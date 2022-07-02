@@ -4,7 +4,6 @@ import random
 import os
 import platform
 
-from itsdangerous import NoneAlgorithm
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
@@ -223,7 +222,7 @@ class Node(object):
             self.memory.add_var(add_str(type), commands[2])
         elif commands[0] == 'import':
             from .parser import Lexer, Parser
-            
+
             path = commands[1]
             if path[0] == '~':
                 path = path[1:]
@@ -235,7 +234,7 @@ class Node(object):
                         if p is None:
                             p = path
                         else:
-                            new_paths.append(p + path)
+                            new_paths.append(p + ':' + path)
                             p = None
                     paths = new_paths
 
