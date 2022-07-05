@@ -12,8 +12,10 @@ from .functions import remove_all_space, is_string, remove_s, to_s, \
 
 if platform.system() == 'Windows':
     slash = '\\'
+    start_slash = ''
 else:
     slash = '/'
+    start_slash = '/'
 
 
 class Node(object):
@@ -235,11 +237,11 @@ class Node(object):
                 if platform.system() == 'Windows':
                     p = None
                     new_paths = []
-                    for path in paths:
+                    for path_loop in paths:
                         if p is None:
-                            p = path
+                            p = path_loop
                         else:
-                            new_paths.append(p + ':' + path)
+                            new_paths.append(p + ':' + path_loop)
                             p = None
                     paths = new_paths
 
@@ -252,8 +254,8 @@ class Node(object):
                         path = p + slash + path + slash + '__main__.aln'
                         break
             elif not path[0] == slash:
-                path = slash.join(file.split(slash)[:-1]) + slash + path \
-                    + '.aln'
+                path = slash.join(file.split(slash)[:-1]) + slash + path
+                + '.aln'
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)
