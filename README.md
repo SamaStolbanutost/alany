@@ -63,6 +63,13 @@ List of commands.
 ```
 python3 -m alany --help
 ```
+## Install, run and uninstall video guide
+
+
+
+https://user-images.githubusercontent.com/80642969/177530152-119ff4e8-8ca2-4d10-9148-52ac4d5fe22f.mp4
+
+
 
 ## Troubleshooting
 
