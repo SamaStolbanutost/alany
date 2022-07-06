@@ -30,6 +30,10 @@ git clone https://github.com/anony-oss/alany.git
 pip install -e alany
 ```
 
+### Install, run and uninstall video guide
+
+https://user-images.githubusercontent.com/80642969/177532967-5aa5575f-ce49-4652-ad20-84da668601f0.mp4
+
 ### Executing program
 
 * Run cli
@@ -63,6 +67,7 @@ List of commands.
 ```
 python3 -m alany --help
 ```
+
 
 ## Troubleshooting
 
