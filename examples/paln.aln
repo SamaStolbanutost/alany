@@ -1,0 +1,5 @@
+var a = 10;
+
+exec examples/python.paln;
+
+print a;

@@ -162,6 +162,11 @@ class Node(object):
             self.set_value(commands[1], math.cos(a))
         elif commands[0] == 'run':
             self.set_value(commands[1], eval(''.join(commands[2:])))
+        elif commands[0] == 'exec':
+            path = ' '.join(commands[1:])
+            with open(path, 'r') as f:
+                code = f.read()
+            exec(code)
         elif commands[0] == 'break':
             return Result(status=2)
         elif commands[0] == 'mul':
@@ -271,8 +276,8 @@ class Node(object):
                 path = self.get_value(commands[2])[1:-1]
                 var = commands[3]
 
-                with open(path, 'r') as file:
-                    text = "'" + file.read() + "'"
+                with open(path, 'r') as f:
+                    text = "'" + f.read() + "'"
 
                 self.memory.add_var(var_name=var, value=text)
             elif commands[1] == 'write':
