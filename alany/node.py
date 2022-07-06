@@ -254,8 +254,7 @@ class Node(object):
                         path = p + slash + path + slash + '__main__.aln'
                         break
             elif not path[0] == slash:
-                path = slash.join(file.split(slash)[:-1]) + slash + path
-                + '.aln'
+                path = slash.join(file.split(slash)[:-1]) + slash + path + '.aln'
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)
