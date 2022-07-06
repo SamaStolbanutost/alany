@@ -72,12 +72,6 @@ python3 -m alany --help
     * None.
 * macOS
     * None.
-     
-     
-     
-   
-     
-      ```
 
 ## Authors
 
