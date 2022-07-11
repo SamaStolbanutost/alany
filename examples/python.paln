@@ -1,1 +1,2 @@
 self.set_value('a', 20)
+self.set_value('b', ['Hello, world!', 'Hello, alany!'])

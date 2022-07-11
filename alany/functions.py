@@ -2,7 +2,7 @@ def remove_all_space(string: str):
     return string.replace(' ', '')
 
 
-def is_string(str: str):
+def is_k_string(str: str):
     try:
         if str[0] == '"' and str[-1] == '"':
             return True
@@ -11,6 +11,27 @@ def is_string(str: str):
         return False
     except Exception:
         return False
+
+
+def is_string(str: str):
+    if is_k_string(str):
+        return True
+    elif not is_int(str):
+        return True
+    return False
+
+
+def is_int(str: str):
+    str = str.strip()
+    try:
+        int(str)
+        return True
+    except Exception:
+        try:
+            float(str)
+            return True
+        except Exception:
+            return False
 
 
 def add_str(str: str):

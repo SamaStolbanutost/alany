@@ -8,7 +8,7 @@ from .memory import Memory, Data
 from .error import Error
 from .result import Result
 from .functions import remove_all_space, is_string, remove_s, to_s, \
-                       remove_start_spaces, parse_args, add_str
+                       remove_start_spaces, parse_args, add_str, is_k_string
 
 if platform.system() == 'Windows':
     slash = '\\'
@@ -72,7 +72,7 @@ class Node(object):
 
             for i, value in enumerate(values):
                 val = str(self.get_value(value))
-                if is_string(val):
+                if is_k_string(val):
                     val = val[1:-1]
                 values[i] = val
 
@@ -259,7 +259,8 @@ class Node(object):
                         path = p + slash + path + slash + '__main__.aln'
                         break
             elif not path[0] == slash:
-                path = slash.join(file.split(slash)[:-1]) + slash + path + '.aln'
+                path = slash.join(file.split(slash)[:-1]) + slash + path + \
+                    '.aln'
             with open(path, 'r') as fl:
                 code = fl.read()
             lexer = Lexer(code)

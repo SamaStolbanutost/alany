@@ -1,7 +1,8 @@
 from typing import List, Dict
 import copy
 from .error import Error
-from .functions import add_str, remove_start_spaces, is_string, to_len
+from .functions import add_str, remove_start_spaces, is_string, to_len, \
+    is_k_string
 
 
 class Memory(object):
@@ -148,53 +149,57 @@ class Data(object):
         self.var_name = str(var_name)
         self.memory: Memory = memory
         self._value = None
-
         self.type = None
-        try:
-            if is_string(value):
-                value = str(value[1:-1])
-                self.type = 'str'
-            else:
-                raise 'Not str'
-        except Exception:
+        if self.memory is not None and self.memory.in_memory(value):
+            var = self.memory.get_var(value)
+            self._value = var._value
+            self.type = var.type
+            self.var_name = var.var_name
+            value = self._value
+        else:
             try:
-                if isinstance(value, float):
-                    raise 'Not int'
-                value = int(value)
-                self.type = 'int'
+                if is_string(value):
+                    if is_k_string(value):
+                        value = value[1:-1]
+                    value = str(value)
+                    self.type = 'str'
+                else:
+                    raise 'Not str'
             except Exception:
                 try:
-                    value = float(value)
-                    self.type = 'float'
+                    if isinstance(value, float):
+                        raise 'Not int'
+                    value = int(value)
+                    self.type = 'int'
                 except Exception:
-                    if isinstance(value, list):
-                        self.type = 'list'
-                        for i, dat in enumerate(value):
-                            if not isinstance(dat, Data):
-                                value[i] = Data(memory=self.memory, value=dat)
-                    elif isinstance(value, Node):
-                        self.type = 'node'
-                    elif isinstance(value, dict):
-                        try:
-                            node: Node = value['node']
-                            self.mem = node.memory
-                            self.type = 'class'
-                        except Exception:
-                            value = value
-                            self.type = 'class'
-                    elif value is not None and \
-                            ('=' in value or '>' in value or '<' in value):
-                        value = self.memory.get_bool_value(value)
-                        self.type = 'bool'
+                    try:
+                        value = float(value)
+                        self.type = 'float'
+                    except Exception:
+                        if isinstance(value, list):
+                            self.type = 'list'
+                            for i, dat in enumerate(value):
+                                if not isinstance(dat, Data):
+                                    value[i] = Data(memory=self.memory,
+                                                    value=dat)
+                        elif isinstance(value, Node):
+                            self.type = 'node'
+                        elif isinstance(value, dict):
+                            try:
+                                node: Node = value['node']
+                                self.mem = node.memory
+                                self.type = 'class'
+                            except Exception:
+                                value = value
+                                self.type = 'class'
+                        elif value is not None and \
+                                ('=' in value or '>' in value or '<' in value):
+                            value = self.memory.get_bool_value(value)
+                            self.type = 'bool'
 
         if self.type is None:
             value = remove_start_spaces(value)
-            if self.memory.in_memory(value) and self.memory is not None:
-                var = self.memory.get_var(value)
-                self._value = var._value
-                self.type = var.type
-                self.var_name = var.var_name
-            elif skip_unknown:
+            if skip_unknown:
                 self._value = None
                 self.type = 'variable'
                 self.var_name = value
@@ -263,6 +268,8 @@ def to_string(value: Data):
     if not isinstance(value, Data):
         return value
     else:
+        if value.type == 'str' and not is_k_string(value._value):
+            value.value = add_str(value._value)
         if not value.type == 'list':
             res = str(value._value)
             return res
