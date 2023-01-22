@@ -4,7 +4,6 @@ class Result(object):
         self.value = value
 
     def is_success(self) -> bool:
-        if self.status in [1, 2]:
-            return True
-        else:
-            return False
+        return self.status in self.positive
+
+    positive = [1, 2]
