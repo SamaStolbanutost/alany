@@ -27,7 +27,7 @@ class Parser(object):
             command = remove_space(command)
             if command.split(' ')[0] in ['if', 'repeat', 'while', 'def',
                                          'class']:
-                self.memory = Memory(parent=self.memory)
+                self.memory = Memory()
                 node = Node(command, index=i, memory=self.memory,
                             is_interpreter=self.is_interpreter)
                 result = self.parse(i)
@@ -36,7 +36,6 @@ class Parser(object):
                 con = True
                 con_to = result[1]
             elif command.split(' ')[0] == 'endblock':
-                self.memory = self.memory.parent
                 return [main_node, i]
             else:
                 main_node.children.append(Node(command, index=i,

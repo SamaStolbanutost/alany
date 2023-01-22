@@ -37,8 +37,8 @@ class Node(object):
         args = args.split(')')[0].split(',')
         return parse_args(args)
 
-    def get_value(self, variable: str, file: str = '') -> any:
-        return self.memory.get_value(variable, file)
+    def get_value(self, variable: str) -> any:
+        return self.memory.get(variable)
 
     def set_value(self, variable: str, value: any, g=True, type='') -> None:
         if isinstance(value, Data):
@@ -51,10 +51,7 @@ class Node(object):
             index = self.get_value(variable.split('[')[1][:-1])
             var.set_list_value(value=value, index=index)
         else:
-            if not g:
-                self.memory.add_var(value, variable)
-            else:
-                self.memory.add_global_var(value, variable)
+            self.memory.set(value, variable)
 
     def get_bool_value(self, expression: str) -> bool:
         return self.memory.get_bool_value(expression)
@@ -86,13 +83,14 @@ class Node(object):
                 self.set_value(var_name, value, g=False, type=commands[2])
             else:
                 var_name = commands[2].split('=')[0]
-                val = '='.join(' '.join(commands[3:]).split('=')[1:])
-                val = remove_start_spaces(val)
-                value = self.get_value(val)
+                value = '='.join(' '.join(commands[3:]).split('=')[1:])
+                value = remove_start_spaces(value)
+                if value == 'input':
+                    value = input()
                 self.set_value(var_name, value, file, type=commands[1])
         elif commands_w[0] == 'len':
             var_name = commands_w[1]
-            ln = len(self.memory.get_var(commands_w[2]).value)
+            ln = len(self.memory.get(commands_w[2]).value)
             self.set_value(var_name, ln)
         elif commands_w[0] == 'array':
             if not commands_w[2] == 'none':
@@ -212,24 +210,24 @@ class Node(object):
             self.memory.get_var(commands[1])._value.append(value)
         elif commands[0] == 'convert':
             if commands[1] == 'int':
-                value = self.memory.get_var(commands[2]).value
+                value = self.memory.get(commands[2]).value
                 if is_string(value):
                     value = value[1:-1]
-                self.memory.get_var(commands[2]).type = 'int'
-                self.memory.get_var(commands[2]).value = int(value)
+                self.memory.get(commands[2]).type = 'int'
+                self.memory.get(commands[2]).value = int(value)
             elif commands[1] == 'float':
-                value = self.memory.get_var(commands[2]).value
+                value = self.memory.get(commands[2]).value
                 if is_string(value):
                     value = value[1:-1]
-                self.memory.get_var(commands[2]).type = 'float'
-                self.memory.get_var(commands[2]).value = float(value)
+                self.memory.get(commands[2]).type = 'float'
+                self.memory.get(commands[2]).value = float(value)
             elif commands[1] == 'str':
-                value = self.memory.get_var(commands[2]).value
-                self.memory.get_var(commands[2]).type = 'str'
-                self.memory.get_var(commands[2]).value = str(value)
+                value = self.memory.get(commands[2]).value
+                self.memory.get(commands[2]).type = 'str'
+                self.memory.get(commands[2]).value = str(value)
         elif commands[0] == 'type':
-            type = self.memory.get_var(commands[1]).type
-            self.memory.add_var(add_str(type), commands[2])
+            type = self.memory.get(commands[1]).type
+            self.memory.set(add_str(type), commands[2])
         elif commands[0] == 'import':
             from .parse import Lexer, Parser
 
