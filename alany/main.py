@@ -1,5 +1,5 @@
 from .result import Result
-from .parser import Lexer, Parser
+from .parse import Lexer, Parser
 from .memory import Memory
 
 

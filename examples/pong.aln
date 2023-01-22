@@ -14,6 +14,7 @@ var vx = -2;
 var vy = -2;
 var score_1 = 0;
 var score_2 = 0;
+print score_1 score_2 \n;
 
 while (1 == 1) {
     pygame.draw.rect(0, 0, 0, 0, 0, 1024, 768);
@@ -70,6 +71,7 @@ while (1 == 1) {
 
             if (temp < 0) {
                 add score_2 score_2 1;
+                print score_1 score_2 \n;
                 var bx = 512;
                 var by = 384;
                 var vx = 2;
@@ -79,6 +81,7 @@ while (1 == 1) {
 
         if (temp > 300) {
             add score_2 score_2 1;
+            print score_1 score_2 \n;
             var bx = 512;
             var by = 384;
             var vx = 2;
@@ -95,6 +98,7 @@ while (1 == 1) {
 
             if (temp < 0) {
                 add score_1 score_1 1;
+                print score_1 score_2 \n;
                 var bx = 512;
                 var by = 384;
                 var vx = -2;
@@ -103,8 +107,8 @@ while (1 == 1) {
         }
         
         if (temp > 300) {
-            print temp \n;
             add score_1 score_1 1;
+            print score_1 score_2 \n;
             var bx = 512;
             var by = 384;
             var vx = -2;
@@ -114,7 +118,6 @@ while (1 == 1) {
 
     add bx bx vx;
     add by by vy;
-    print score_1 score_2 \n;
 }
 
 pygame.quit();

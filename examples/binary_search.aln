@@ -1,9 +1,9 @@
-var a = input;
+var str a = input;
 convert int a;
 
-var min = 1;
-var max = 100;
-var b = 50;
+var float min = 1;
+var float max = 100;
+var float b = 50;
 repeat 100 {
     if (a == b) {
         print 'Ready' \n;
@@ -11,12 +11,12 @@ repeat 100 {
     }
     if (a != b) {
         if (b > a) {
-            var max = b;
+            var float max = b;
             print 'Min:' min \n;
             print 'Max:' max \n;
         }
         if (b < a) {
-            var min = b;
+            var float min = b;
             print 'Min:' min \n;
             print 'Max:' max \n;
         }

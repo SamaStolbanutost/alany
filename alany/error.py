@@ -7,6 +7,9 @@ class Error:
             else:
                 print(f'RuntimeError: Not a number {fun}({value_1})')
 
+        def not_existing_variable(name: str):
+            print(f'RuntimeError: Not existing variable {name}')
+
         def unknow_type(value: any) -> None:
             print(f'RuntimeError: Unknow type {value}')
 

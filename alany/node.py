@@ -7,8 +7,9 @@ import platform
 from .memory import Memory, Data
 from .error import Error
 from .result import Result
-from .functions import remove_all_space, is_string, remove_s, to_s, \
-                       remove_start_spaces, parse_args, add_str, is_k_string
+from .functions import remove_all_space, is_string, remove_s, \
+                       remove_start_spaces, parse_args, add_str, is_k_string, \
+                       is_int
 
 if platform.system() == 'Windows':
     slash = '\\'
@@ -39,15 +40,12 @@ class Node(object):
     def get_value(self, variable: str, file: str = '') -> any:
         return self.memory.get_value(variable, file)
 
-    def set_value(self, variable: str, value: any, g=True) -> None:
+    def set_value(self, variable: str, value: any, g=True, type='') -> None:
         if isinstance(value, Data):
             value = value.value
         if self.memory.in_memory(variable):
             var = self.memory.get_var(variable)
-            if var is not None:
-                var.value = value
-            else:
-                self.memory.add_var(var_name=variable, value=value)
+            self.memory.add_var(var_name=variable, value=value)
         elif variable[-1] == ']':
             var = self.memory.get_var(variable.split('[')[0])
             index = self.get_value(variable.split('[')[1][:-1])
@@ -71,10 +69,10 @@ class Node(object):
             values = commands[1:]
 
             for i, value in enumerate(values):
-                val = str(self.get_value(value))
+                val = self.get_value(value)
                 if is_k_string(val):
                     val = val[1:-1]
-                values[i] = val
+                values[i] = str(val)
 
             tp = ' '.join(values)
             print(tp, end='')
@@ -83,15 +81,15 @@ class Node(object):
             print(char, end='')
         elif commands[0] == 'var':
             if commands[1] == 'local':
-                var_name = commands[2].split('=')[0]
-                value = self.get_value(' '.join(commands[3:]))
-                self.set_value(var_name, value, g=False)
+                var_name = commands[3].split('=')[0]
+                value = self.get_value(' '.join(commands[4:]))
+                self.set_value(var_name, value, g=False, type=commands[2])
             else:
-                var_name = commands[1].split('=')[0]
-                val = '='.join(self.command.split('=')[1:])
+                var_name = commands[2].split('=')[0]
+                val = '='.join(' '.join(commands[3:]).split('=')[1:])
                 val = remove_start_spaces(val)
                 value = self.get_value(val)
-                self.set_value(var_name, value, file)
+                self.set_value(var_name, value, file, type=commands[1])
         elif commands_w[0] == 'len':
             var_name = commands_w[1]
             ln = len(self.memory.get_var(commands_w[2]).value)
@@ -115,10 +113,10 @@ class Node(object):
         elif commands[0] == 'add':
             a = remove_s(self.get_value(commands[2]))
             b = remove_s(self.get_value(commands[3]))
+            if is_int(a) or is_int(b):
+                a = int(a)
+                b = int(b)
             val = a + b
-
-            if isinstance(val, str):
-                val = to_s(val)
 
             self.set_value(commands[1], val)
         elif commands[0] == 'sub':
@@ -233,7 +231,7 @@ class Node(object):
             type = self.memory.get_var(commands[1]).type
             self.memory.add_var(add_str(type), commands[2])
         elif commands[0] == 'import':
-            from .parser import Lexer, Parser
+            from .parse import Lexer, Parser
 
             path = commands[1]
             if path[0] == '~':
