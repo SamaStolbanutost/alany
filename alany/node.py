@@ -44,10 +44,10 @@ class Node(object):
         if isinstance(value, Data):
             value = value.value
         if self.memory.in_memory(variable):
-            var = self.memory.get_var(variable)
-            self.memory.add_var(var_name=variable, value=value)
+            var = self.memory.get(variable)
+            self.memory.set(variable, value)
         elif variable[-1] == ']':
-            var = self.memory.get_var(variable.split('[')[0])
+            var = self.memory.get(variable.split('[')[0])
             index = self.get_value(variable.split('[')[1][:-1])
             var.set_list_value(value=value, index=index)
         else:
@@ -207,7 +207,7 @@ class Node(object):
             self.memory.add_global_var(value=value, var_name=var_name)
         elif commands[0] == 'append':
             value = self.get_value(commands[2])
-            self.memory.get_var(commands[1])._value.append(value)
+            self.memory.get(commands[1]).value.append(value)
         elif commands[0] == 'convert':
             if commands[1] == 'int':
                 value = self.memory.get(commands[2]).value
@@ -347,7 +347,7 @@ class Node(object):
         elif len(commands[0].split('(')) > 0 and \
                 self.memory.in_memory(commands[0].split('(')[0]):
 
-            var = self.memory.get_var(commands[0].split('(')[0])
+            var = self.memory.get(commands[0].split('(')[0])
             if var.type == 'node':
                 node: Node = var.value
                 args_names = node.get_args()
